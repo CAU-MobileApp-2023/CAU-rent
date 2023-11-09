@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:teamproject/style.dart';
 
 class EquipmentPage extends StatefulWidget {
+  const EquipmentPage({super.key});
+
   @override
-  _EquipmentPageState createState() => _EquipmentPageState();
+  State<EquipmentPage> createState() => _EquipmentPageState();
 }
 
 class _EquipmentPageState extends State<EquipmentPage> {
-  final dogs = List.generate(41, (i) => i + 1);
+  final macBooks = List.generate(27, (i) => i + 1);
+  final lgGrams = List.generate(26, (i) => i + 1);
+  final webCams = List.generate(130, (i) => i + 1);
 
   @override
   Widget build(BuildContext context) {
@@ -16,12 +20,11 @@ class _EquipmentPageState extends State<EquipmentPage> {
         child: Scaffold(
           body: Column(
             children: [
-              Padding(
-                padding: EdgeInsets.all(30),
-                child: Text("Equipment", style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold)),
-              ),
-              TabBar(
-                  labelStyle: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+              const SizedBox(height: 70),
+              const Text("Equipment", style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 20),
+              const TabBar(
+                  labelStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   labelColor: AppColor.Blue,                // 선택된 탭의 색상
                   unselectedLabelColor: AppColor.Blue2,     // 선택되지 않은 탭의 색상
                   indicatorSize: TabBarIndicatorSize.label,
@@ -38,17 +41,16 @@ class _EquipmentPageState extends State<EquipmentPage> {
                   child: TabBarView(
                     children: [
                       GridView.count(
-                        crossAxisCount: 3,
-                        children: dogs.map((i) => Image(image: AssetImage('assets/dog_$i.jpeg'))).toList(),
+                        crossAxisCount: 4,
+                        children: macBooks.map((i) => Image(image: AssetImage('assets/.jpeg'))).toList(),
                       ),
-                      Center(
-                        child: Text('첫 번째 탭 내용'),
+                      GridView.count(
+                        crossAxisCount: 4,
+                        children: lgGrams.map((i) => Image(image: AssetImage('assets/.jpeg'))).toList(),
                       ),
-                      Center(
-                        child: Text('두 번째 탭 내용'),
-                      ),
-                      Center(
-                        child: Text('세 번째 탭 내용'),
+                      GridView.count(
+                        crossAxisCount: 4,
+                        children: webCams.map((i) => Image(image: AssetImage('assets/.jpeg'))).toList(),
                       ),
                     ],
                   )
