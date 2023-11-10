@@ -13,6 +13,8 @@ class _EquipmentPageState extends State<EquipmentPage> {
   final lgGrams = List.generate(26, (i) => i + 1);
   final webCams = List.generate(130, (i) => i + 1);
 
+  static const TextStyle iconTextStyle = TextStyle(fontSize: 15, color: AppColor.Blue4, fontWeight: FontWeight.bold);
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -42,15 +44,48 @@ class _EquipmentPageState extends State<EquipmentPage> {
                     children: [
                       GridView.count(
                         crossAxisCount: 4,
-                        children: macBooks.map((i) => Image(image: AssetImage('assets/.jpeg'))).toList(),
+                        children: webCams.map((i) => Column(
+                          // mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            IconButton(
+                              onPressed: () { },
+                              icon: const Icon(Icons.laptop_mac, color: AppColor.Blue4),
+                              iconSize: 65,
+                              padding: EdgeInsets.zero,
+                            ),
+                            Text("#${i}", style: iconTextStyle),
+                          ],
+                        )).toList(),
                       ),
                       GridView.count(
                         crossAxisCount: 4,
-                        children: lgGrams.map((i) => Image(image: AssetImage('assets/.jpeg'))).toList(),
+                        children: webCams.map((i) => Column(
+                          // mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            IconButton(
+                              onPressed: () { },
+                              icon: const Icon(Icons.laptop_windows, color: AppColor.Blue4),
+                              iconSize: 65,
+                              padding: EdgeInsets.zero,
+                            ),
+                            Text("#${i}", style: iconTextStyle),
+                          ],
+                        )).toList(),
                       ),
                       GridView.count(
                         crossAxisCount: 4,
-                        children: webCams.map((i) => Image(image: AssetImage('assets/.jpeg'))).toList(),
+                        children: webCams.map((i) => Column(
+                          // mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            IconButton(
+                              onPressed: () { },
+                              icon: const Icon(Icons.photo_camera, color: AppColor.Blue4),
+                              iconSize: 65,
+                              padding: EdgeInsets.zero,
+                            ),
+                            Text("#${i}", style: iconTextStyle),
+                          ],
+                        )).toList(),
                       ),
                     ],
                   )
