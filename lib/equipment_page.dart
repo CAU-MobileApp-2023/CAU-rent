@@ -13,7 +13,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
   final lgGrams = List.generate(26, (i) => i + 1);
   final webCams = List.generate(130, (i) => i + 1);
 
-  static const TextStyle iconTextStyle = TextStyle(fontSize: 15, color: AppColor.Blue4, fontWeight: FontWeight.bold);
+  static const TextStyle iconTextStyle = TextStyle(fontSize: 16, color: AppColor.Blue4, fontWeight: FontWeight.bold);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
           body: Column(
             children: [
               const SizedBox(height: 70),
-              const Text("Equipment", style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold)),
+              const Text("Equipment", style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold)),
               const SizedBox(height: 20),
               const TabBar(
                   labelStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -44,11 +44,13 @@ class _EquipmentPageState extends State<EquipmentPage> {
                     children: [
                       GridView.count(
                         crossAxisCount: 4,
-                        children: webCams.map((i) => Column(
+                        children: macBooks.map((i) => Column(
                           // mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             IconButton(
-                              onPressed: () { },
+                              onPressed: () {
+                                _showAlertDialog(context, "MacBook", i);
+                              },
                               icon: const Icon(Icons.laptop_mac, color: AppColor.Blue4),
                               iconSize: 65,
                               padding: EdgeInsets.zero,
@@ -59,11 +61,13 @@ class _EquipmentPageState extends State<EquipmentPage> {
                       ),
                       GridView.count(
                         crossAxisCount: 4,
-                        children: webCams.map((i) => Column(
+                        children: lgGrams.map((i) => Column(
                           // mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             IconButton(
-                              onPressed: () { },
+                              onPressed: () {
+                                _showAlertDialog(context, "LG Gram", i);
+                              },
                               icon: const Icon(Icons.laptop_windows, color: AppColor.Blue4),
                               iconSize: 65,
                               padding: EdgeInsets.zero,
@@ -78,7 +82,9 @@ class _EquipmentPageState extends State<EquipmentPage> {
                           // mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             IconButton(
-                              onPressed: () { },
+                              onPressed: () {
+                                _showAlertDialog(context, "WebCam", i);
+                              },
                               icon: const Icon(Icons.photo_camera, color: AppColor.Blue4),
                               iconSize: 65,
                               padding: EdgeInsets.zero,
@@ -93,6 +99,34 @@ class _EquipmentPageState extends State<EquipmentPage> {
             ],
           ),
         )
+    );
+  }
+
+  void _showAlertDialog(BuildContext context, String equipmentType, int equipmentNum) {
+    // AlertDialog 보이기
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('${equipmentType} #${equipmentNum}'),
+          content: Text('이것은 AlertDialog 예제입니다.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // AlertDialog 닫기
+              },
+              child: Text('취소'),
+            ),
+            TextButton(
+              onPressed: () {
+                // 여기에 확인 버튼을 눌렀을 때의 동작을 추가
+                Navigator.of(context).pop(); // AlertDialog 닫기
+              },
+              child: Text('확인'),
+            ),
+          ],
+        );
+      },
     );
   }
 }
