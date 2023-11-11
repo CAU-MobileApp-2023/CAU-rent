@@ -108,23 +108,50 @@ class _EquipmentPageState extends State<EquipmentPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('${equipmentType} #${equipmentNum}'),
-          content: Text('이것은 AlertDialog 예제입니다.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // AlertDialog 닫기
-              },
-              child: Text('취소'),
-            ),
-            TextButton(
-              onPressed: () {
-                // 여기에 확인 버튼을 눌렀을 때의 동작을 추가
-                Navigator.of(context).pop(); // AlertDialog 닫기
-              },
-              child: Text('확인'),
-            ),
-          ],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          title: Center(
+              child: Text(
+                '$equipmentType #$equipmentNum',
+                style: const TextStyle(fontSize: 30, color: AppColor.Blue, fontWeight: FontWeight.bold),
+              )
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('현재 대여 중인 장비입니다.'),
+              const Text(
+                'This equipment is not available for rent now.',
+                style: TextStyle(fontSize: 14.4),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(); // AlertDialog 닫기
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(AppColor.Blue),
+                      foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                      fixedSize: MaterialStateProperty.all<Size>(Size(120, 48)),
+                      shape: MaterialStateProperty.all<OutlinedBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0), // 버튼의 모서리를 둥글게
+                          )
+                      ),
+                    ),
+                    child: const Text(
+                      'Confirm',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         );
       },
     );
