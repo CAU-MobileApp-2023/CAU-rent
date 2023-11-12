@@ -78,7 +78,7 @@ class _HomePageState extends State<HomePage> {
                 // child: Icon(Icons.comment_outlined),
                 child: Icon(Icons.comment_outlined),
               ),
-              label: 'Rooms',
+              label: 'Room',
             ),
             BottomNavigationBarItem(
               icon: Padding(
