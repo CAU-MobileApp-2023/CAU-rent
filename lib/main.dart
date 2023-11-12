@@ -32,8 +32,8 @@ class _HomePageState extends State<HomePage> {
   static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static final List<Widget> _widgetOptions = <Widget>[
     const Text('Index 0: Home', style: optionStyle),
-    EquipmentPage(),
-    RoomPage(),
+    const EquipmentPage(),
+    const RoomPage(),
     // const Text('Index 2: Rooms', style: optionStyle),
     const Text('Index 3: My Page', style: optionStyle),
   ];
@@ -61,22 +61,21 @@ class _HomePageState extends State<HomePage> {
             BottomNavigationBarItem(
               icon: Padding(
                 padding: EdgeInsets.only(bottom: 2.0),
-                child: Icon(Icons.home_outlined),
+                child: Icon(Icons.circle_notifications_outlined),
               ),
               label: 'Home',
             ),
             BottomNavigationBarItem(
               icon: Padding(
                 padding: EdgeInsets.only(bottom: 2.0),
-                child: Icon(Icons.desktop_mac_outlined),
+                child: Icon(Icons.build_circle_outlined),
               ),
               label: 'Equipment',
             ),
             BottomNavigationBarItem(
               icon: Padding(
                 padding: EdgeInsets.only(bottom: 2.0),
-                // child: Icon(Icons.comment_outlined),
-                child: Icon(Icons.comment_outlined),
+                child: Icon(Icons.supervised_user_circle_outlined),
               ),
               label: 'Room',
             ),
