@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:teamproject/room_page.dart';
 import 'package:teamproject/style.dart';
 import 'package:teamproject/equipment_page.dart';
 
@@ -32,7 +33,8 @@ class _HomePageState extends State<HomePage> {
   static final List<Widget> _widgetOptions = <Widget>[
     const Text('Index 0: Home', style: optionStyle),
     EquipmentPage(),
-    const Text('Index 2: Rooms', style: optionStyle),
+    RoomPage(),
+    // const Text('Index 2: Rooms', style: optionStyle),
     const Text('Index 3: My Page', style: optionStyle),
   ];
 
@@ -73,6 +75,7 @@ class _HomePageState extends State<HomePage> {
             BottomNavigationBarItem(
               icon: Padding(
                 padding: EdgeInsets.only(bottom: 2.0),
+                // child: Icon(Icons.comment_outlined),
                 child: Icon(Icons.comment_outlined),
               ),
               label: 'Rooms',
