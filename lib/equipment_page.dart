@@ -9,11 +9,24 @@ class EquipmentPage extends StatefulWidget {
 }
 
 class _EquipmentPageState extends State<EquipmentPage> {
+  late Map<int, bool> macBookRentalStatus;
+  late Map<int, bool> lgGramRentalStatus;
+  late Map<int, bool> webCamRentalStatus;
+
   final macBooks = List.generate(27, (i) => i + 1);
   final lgGrams = List.generate(26, (i) => i + 1);
   final webCams = List.generate(130, (i) => i + 1);
 
   static const TextStyle iconTextStyle = TextStyle(fontSize: 16, color: AppColor.Blue4, fontWeight: FontWeight.bold);
+
+  @override
+  void initState() {
+    super.initState();
+    // 각 장비 대여 상태 저장
+    macBookRentalStatus = { for (var item in macBooks) item : item < 10 };
+    lgGramRentalStatus = { for (var item in lgGrams) item : item < 10 };
+    webCamRentalStatus = Map.fromIterable(webCams, key: (item) => item, value: (item) => item < 10);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +44,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
                   unselectedLabelColor: AppColor.Blue2,     // 선택되지 않은 탭의 색상
                   indicatorSize: TabBarIndicatorSize.label,
                   indicator: UnderlineTabIndicator(
-                    borderSide: BorderSide(width: 2, color: AppColor.Blue),
+                    borderSide: BorderSide(width: 3, color: AppColor.Blue),
                   ),
                   tabs: [
                     Tab(text: 'MacBook'),
@@ -45,51 +58,81 @@ class _EquipmentPageState extends State<EquipmentPage> {
                       GridView.count(
                         crossAxisCount: 4,
                         children: macBooks.map((i) => Column(
-                          // mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             IconButton(
                               onPressed: () {
-                                _showAlertDialog(context, "MacBook", i);
+                                if (macBookRentalStatus[i] == true) {
+                                  _showAlertDialog(context, "MacBook", i);
+                                } else {
+                                  _showModalBottomSheet(context, "MacBook", i);
+                                }
                               },
-                              icon: const Icon(Icons.laptop_mac, color: AppColor.Blue4),
+                              icon: macBookRentalStatus[i] == true
+                                  ? const Icon(Icons.laptop_mac, color: AppColor.Grey1)
+                                  : const Icon(Icons.laptop_mac, color: AppColor.Blue4),
                               iconSize: 65,
                               padding: EdgeInsets.zero,
                             ),
-                            Text("#$i", style: iconTextStyle),
+                            Text(
+                              "#$i",
+                              style: macBookRentalStatus[i] == true
+                                   ? TextStyle(fontSize: 16, color: AppColor.Grey1, fontWeight: FontWeight.bold)
+                                   : TextStyle(fontSize: 16, color: AppColor.Blue4, fontWeight: FontWeight.bold)
+                            ),
                           ],
                         )).toList(),
                       ),
                       GridView.count(
                         crossAxisCount: 4,
                         children: lgGrams.map((i) => Column(
-                          // mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             IconButton(
                               onPressed: () {
-                                _showAlertDialog(context, "LG Gram", i);
+                                if (lgGramRentalStatus[i] == true) {
+                                  _showAlertDialog(context, "LG Gram", i);
+                                } else {
+                                  _showModalBottomSheet(context, "LG Gram", i);
+                                }
                               },
-                              icon: const Icon(Icons.laptop_windows, color: AppColor.Blue4),
+                              icon: lgGramRentalStatus[i] == true
+                                  ? const Icon(Icons.laptop_windows, color: AppColor.Grey1)
+                                  : const Icon(Icons.laptop_windows, color: AppColor.Blue4),
                               iconSize: 65,
                               padding: EdgeInsets.zero,
                             ),
-                            Text("#$i", style: iconTextStyle),
+                            Text(
+                                "#$i",
+                                style: lgGramRentalStatus[i] == true
+                                    ? TextStyle(fontSize: 16, color: AppColor.Grey1, fontWeight: FontWeight.bold)
+                                    : TextStyle(fontSize: 16, color: AppColor.Blue4, fontWeight: FontWeight.bold)
+                            ),
                           ],
                         )).toList(),
                       ),
                       GridView.count(
                         crossAxisCount: 4,
                         children: webCams.map((i) => Column(
-                          // mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             IconButton(
                               onPressed: () {
-                                _showModalBottomSheet(context, "WebCam", i);
+                                if (webCamRentalStatus[i] == true) {
+                                  _showAlertDialog(context, "WebCam", i);
+                                } else {
+                                  _showModalBottomSheet(context, "WebCam", i);
+                                }
                               },
-                              icon: const Icon(Icons.photo_camera, color: AppColor.Blue4),
+                              icon: webCamRentalStatus[i] == true
+                                  ? const Icon(Icons.photo_camera, color: AppColor.Grey1)
+                                  : const Icon(Icons.photo_camera, color: AppColor.Blue4),
                               iconSize: 65,
                               padding: EdgeInsets.zero,
                             ),
-                            Text("#$i", style: iconTextStyle),
+                            Text(
+                                "#$i",
+                                style: webCamRentalStatus[i] == true
+                                    ? TextStyle(fontSize: 16, color: AppColor.Grey1, fontWeight: FontWeight.bold)
+                                    : TextStyle(fontSize: 16, color: AppColor.Blue4, fontWeight: FontWeight.bold)
+                            ),
                           ],
                         )).toList(),
                       ),
