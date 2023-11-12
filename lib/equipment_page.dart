@@ -55,7 +55,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
                               iconSize: 65,
                               padding: EdgeInsets.zero,
                             ),
-                            Text("#${i}", style: iconTextStyle),
+                            Text("#$i", style: iconTextStyle),
                           ],
                         )).toList(),
                       ),
@@ -72,7 +72,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
                               iconSize: 65,
                               padding: EdgeInsets.zero,
                             ),
-                            Text("#${i}", style: iconTextStyle),
+                            Text("#$i", style: iconTextStyle),
                           ],
                         )).toList(),
                       ),
@@ -83,13 +83,13 @@ class _EquipmentPageState extends State<EquipmentPage> {
                           children: [
                             IconButton(
                               onPressed: () {
-                                _showAlertDialog(context, "WebCam", i);
+                                _showModalBottomSheet(context, "WebCam", i);
                               },
                               icon: const Icon(Icons.photo_camera, color: AppColor.Blue4),
                               iconSize: 65,
                               padding: EdgeInsets.zero,
                             ),
-                            Text("#${i}", style: iconTextStyle),
+                            Text("#$i", style: iconTextStyle),
                           ],
                         )).toList(),
                       ),
@@ -102,8 +102,90 @@ class _EquipmentPageState extends State<EquipmentPage> {
     );
   }
 
+  void _showModalBottomSheet(BuildContext context, String equipmentType, int equipmentNum) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return Container(
+          height: 480,
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(15.0)),
+            color: AppColor.Blue1,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                '$equipmentType #$equipmentNum',
+                style: const TextStyle(fontSize: 32, color: AppColor.Blue, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 20),
+              Container(width: 340, height: 180, color: Colors.white),
+              const SizedBox(height: 20),
+              const Text(
+                '대여하시겠습니까?',
+                style: TextStyle(fontSize: 32, color: AppColor.Blue4, fontWeight: FontWeight.bold),
+              ),
+              const Text(
+                'Do you want to rent?',
+                style: TextStyle(fontSize: 20, color: AppColor.Blue4, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      // equipmentType, equipmentNum
+                      Navigator.of(context).pop(); // AlertDialog 닫기
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(AppColor.Blue3),
+                      foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                      fixedSize: MaterialStateProperty.all<Size>(const Size(140, 50)),
+                      shape: MaterialStateProperty.all<OutlinedBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0), // 버튼의 모서리를 둥글게
+                          )
+                      ),
+                    ),
+                    child: const Text(
+                      'Confirm',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(); // AlertDialog 닫기
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                      foregroundColor: MaterialStateProperty.all<Color>(AppColor.Blue3),
+                      side: MaterialStateProperty.all<BorderSide>(BorderSide(color: AppColor.Blue3, width: 2.0)),
+                      fixedSize: MaterialStateProperty.all<Size>(const Size(140, 50)),
+                      shape: MaterialStateProperty.all<OutlinedBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0), // 버튼의 모서리를 둥글게
+                          )
+                      ),
+                    ),
+                    child: const Text(
+                      'Cancel',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   void _showAlertDialog(BuildContext context, String equipmentType, int equipmentNum) {
-    // AlertDialog 보이기
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -125,7 +207,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
                 'This equipment is not available for rent now.',
                 style: TextStyle(fontSize: 14.4),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 25),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -134,9 +216,9 @@ class _EquipmentPageState extends State<EquipmentPage> {
                       Navigator.of(context).pop(); // AlertDialog 닫기
                     },
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(AppColor.Blue),
+                      backgroundColor: MaterialStateProperty.all<Color>(AppColor.Blue3),
                       foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                      fixedSize: MaterialStateProperty.all<Size>(Size(120, 48)),
+                      fixedSize: MaterialStateProperty.all<Size>(const Size(140, 50)),
                       shape: MaterialStateProperty.all<OutlinedBorder>(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15.0), // 버튼의 모서리를 둥글게
@@ -145,7 +227,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
                     ),
                     child: const Text(
                       'Confirm',
-                      style: TextStyle(fontSize: 18),
+                      style: TextStyle(fontSize: 20),
                     ),
                   ),
                 ],
