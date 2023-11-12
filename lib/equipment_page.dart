@@ -17,15 +17,13 @@ class _EquipmentPageState extends State<EquipmentPage> {
   final lgGrams = List.generate(26, (i) => i + 1);
   final webCams = List.generate(130, (i) => i + 1);
 
-  static const TextStyle iconTextStyle = TextStyle(fontSize: 16, color: AppColor.Blue4, fontWeight: FontWeight.bold);
-
   @override
   void initState() {
     super.initState();
     // 각 장비 대여 상태 저장
     macBookRentalStatus = { for (var item in macBooks) item : item < 10 };
     lgGramRentalStatus = { for (var item in lgGrams) item : item < 10 };
-    webCamRentalStatus = Map.fromIterable(webCams, key: (item) => item, value: (item) => item < 10);
+    webCamRentalStatus = { for (var item in webCams) item : item < 10 };
   }
 
   @override
@@ -76,8 +74,8 @@ class _EquipmentPageState extends State<EquipmentPage> {
                             Text(
                               "#$i",
                               style: macBookRentalStatus[i] == true
-                                   ? TextStyle(fontSize: 16, color: AppColor.Grey1, fontWeight: FontWeight.bold)
-                                   : TextStyle(fontSize: 16, color: AppColor.Blue4, fontWeight: FontWeight.bold)
+                                   ? const TextStyle(fontSize: 16, color: AppColor.Grey1, fontWeight: FontWeight.bold)
+                                   : const TextStyle(fontSize: 16, color: AppColor.Blue4, fontWeight: FontWeight.bold)
                             ),
                           ],
                         )).toList(),
@@ -103,8 +101,8 @@ class _EquipmentPageState extends State<EquipmentPage> {
                             Text(
                                 "#$i",
                                 style: lgGramRentalStatus[i] == true
-                                    ? TextStyle(fontSize: 16, color: AppColor.Grey1, fontWeight: FontWeight.bold)
-                                    : TextStyle(fontSize: 16, color: AppColor.Blue4, fontWeight: FontWeight.bold)
+                                    ? const TextStyle(fontSize: 16, color: AppColor.Grey1, fontWeight: FontWeight.bold)
+                                    : const TextStyle(fontSize: 16, color: AppColor.Blue4, fontWeight: FontWeight.bold)
                             ),
                           ],
                         )).toList(),
@@ -130,8 +128,8 @@ class _EquipmentPageState extends State<EquipmentPage> {
                             Text(
                                 "#$i",
                                 style: webCamRentalStatus[i] == true
-                                    ? TextStyle(fontSize: 16, color: AppColor.Grey1, fontWeight: FontWeight.bold)
-                                    : TextStyle(fontSize: 16, color: AppColor.Blue4, fontWeight: FontWeight.bold)
+                                    ? const TextStyle(fontSize: 16, color: AppColor.Grey1, fontWeight: FontWeight.bold)
+                                    : const TextStyle(fontSize: 16, color: AppColor.Blue4, fontWeight: FontWeight.bold)
                             ),
                           ],
                         )).toList(),
@@ -206,7 +204,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
                       foregroundColor: MaterialStateProperty.all<Color>(AppColor.Blue3),
-                      side: MaterialStateProperty.all<BorderSide>(BorderSide(color: AppColor.Blue3, width: 2.0)),
+                      side: MaterialStateProperty.all<BorderSide>(const BorderSide(color: AppColor.Blue3, width: 2.0)),
                       fixedSize: MaterialStateProperty.all<Size>(const Size(140, 50)),
                       shape: MaterialStateProperty.all<OutlinedBorder>(
                           RoundedRectangleBorder(
