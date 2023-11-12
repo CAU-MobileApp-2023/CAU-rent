@@ -183,7 +183,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
                       Navigator.of(context).pop(); // AlertDialog 닫기
                     },
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(AppColor.Blue3),
+                      backgroundColor: MaterialStateProperty.all<Color>(AppColor.Blue),
                       foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
                       fixedSize: MaterialStateProperty.all<Size>(const Size(140, 50)),
                       shape: MaterialStateProperty.all<OutlinedBorder>(
@@ -203,8 +203,8 @@ class _EquipmentPageState extends State<EquipmentPage> {
                     },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                      foregroundColor: MaterialStateProperty.all<Color>(AppColor.Blue3),
-                      side: MaterialStateProperty.all<BorderSide>(const BorderSide(color: AppColor.Blue3, width: 2.0)),
+                      foregroundColor: MaterialStateProperty.all<Color>(AppColor.Blue),
+                      side: MaterialStateProperty.all<BorderSide>(const BorderSide(color: AppColor.Blue, width: 2.0)),
                       fixedSize: MaterialStateProperty.all<Size>(const Size(140, 50)),
                       shape: MaterialStateProperty.all<OutlinedBorder>(
                           RoundedRectangleBorder(
@@ -257,7 +257,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
                       Navigator.of(context).pop(); // AlertDialog 닫기
                     },
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(AppColor.Blue3),
+                      backgroundColor: MaterialStateProperty.all<Color>(AppColor.Blue),
                       foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
                       fixedSize: MaterialStateProperty.all<Size>(const Size(140, 50)),
                       shape: MaterialStateProperty.all<OutlinedBorder>(
