@@ -36,105 +36,111 @@ class _EquipmentPageState extends State<EquipmentPage> {
               const SizedBox(height: 70),
               const Text("Equipment", style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold)),
               const SizedBox(height: 20),
-              const TabBar(
-                  labelStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  labelColor: AppColor.Blue,                // 선택된 탭의 색상
-                  unselectedLabelColor: AppColor.Blue2,     // 선택되지 않은 탭의 색상
-                  indicatorSize: TabBarIndicatorSize.label,
-                  indicator: UnderlineTabIndicator(
-                    borderSide: BorderSide(width: 3, color: AppColor.Blue),
-                  ),
-                  tabs: [
-                    Tab(text: 'MacBook'),
-                    Tab(text: 'LG gram'),
-                    Tab(text: 'WebCam'),
-                  ]
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 25),
+                child: TabBar(
+                    labelStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    labelColor: AppColor.Blue,                // 선택된 탭의 색상
+                    unselectedLabelColor: AppColor.Blue2,     // 선택되지 않은 탭의 색상
+                    indicatorSize: TabBarIndicatorSize.label,
+                    indicator: UnderlineTabIndicator(
+                      borderSide: BorderSide(width: 3, color: AppColor.Blue),
+                    ),
+                    tabs: [
+                      Tab(text: 'MacBook'),
+                      Tab(text: 'LG gram'),
+                      Tab(text: 'WebCam'),
+                    ]
+                ),
               ),
               Expanded(
-                  child: TabBarView(
-                    children: [
-                      GridView.count(
-                        crossAxisCount: 4,
-                        children: macBooks.map((i) => Column(
-                          children: [
-                            IconButton(
-                              onPressed: () {
-                                if (macBookRentalStatus[i] == true) {
-                                  _showAlertDialog(context, "MacBook", i);
-                                } else {
-                                  _showModalBottomSheet(context, "MacBook", i);
-                                }
-                              },
-                              icon: macBookRentalStatus[i] == true
-                                  ? const Icon(Icons.laptop_mac, color: AppColor.Grey1)
-                                  : const Icon(Icons.laptop_mac, color: AppColor.Blue4),
-                              iconSize: 65,
-                              padding: EdgeInsets.zero,
-                            ),
-                            Text(
-                              "#$i",
-                              style: macBookRentalStatus[i] == true
-                                   ? const TextStyle(fontSize: 16, color: AppColor.Grey1, fontWeight: FontWeight.bold)
-                                   : const TextStyle(fontSize: 16, color: AppColor.Blue4, fontWeight: FontWeight.bold)
-                            ),
-                          ],
-                        )).toList(),
-                      ),
-                      GridView.count(
-                        crossAxisCount: 4,
-                        children: lgGrams.map((i) => Column(
-                          children: [
-                            IconButton(
-                              onPressed: () {
-                                if (lgGramRentalStatus[i] == true) {
-                                  _showAlertDialog(context, "LG Gram", i);
-                                } else {
-                                  _showModalBottomSheet(context, "LG Gram", i);
-                                }
-                              },
-                              icon: lgGramRentalStatus[i] == true
-                                  ? const Icon(Icons.laptop_windows, color: AppColor.Grey1)
-                                  : const Icon(Icons.laptop_windows, color: AppColor.Blue4),
-                              iconSize: 65,
-                              padding: EdgeInsets.zero,
-                            ),
-                            Text(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: TabBarView(
+                      children: [
+                        GridView.count(
+                          crossAxisCount: 4,
+                          children: macBooks.map((i) => Column(
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  if (macBookRentalStatus[i] == true) {
+                                    _showUnavailableDialog(context, "MacBook", i);
+                                  } else {
+                                    _showModalBottomSheet(context, "MacBook", i);
+                                  }
+                                },
+                                icon: macBookRentalStatus[i] == true
+                                    ? const Icon(Icons.laptop_mac, color: AppColor.Grey1)
+                                    : const Icon(Icons.laptop_mac, color: AppColor.Blue4),
+                                iconSize: 65,
+                                padding: EdgeInsets.zero,
+                              ),
+                              Text(
                                 "#$i",
-                                style: lgGramRentalStatus[i] == true
-                                    ? const TextStyle(fontSize: 16, color: AppColor.Grey1, fontWeight: FontWeight.bold)
-                                    : const TextStyle(fontSize: 16, color: AppColor.Blue4, fontWeight: FontWeight.bold)
-                            ),
-                          ],
-                        )).toList(),
-                      ),
-                      GridView.count(
-                        crossAxisCount: 4,
-                        children: webCams.map((i) => Column(
-                          children: [
-                            IconButton(
-                              onPressed: () {
-                                if (webCamRentalStatus[i] == true) {
-                                  _showAlertDialog(context, "WebCam", i);
-                                } else {
-                                  _showModalBottomSheet(context, "WebCam", i);
-                                }
-                              },
-                              icon: webCamRentalStatus[i] == true
-                                  ? const Icon(Icons.photo_camera, color: AppColor.Grey1)
-                                  : const Icon(Icons.photo_camera, color: AppColor.Blue4),
-                              iconSize: 65,
-                              padding: EdgeInsets.zero,
-                            ),
-                            Text(
-                                "#$i",
-                                style: webCamRentalStatus[i] == true
-                                    ? const TextStyle(fontSize: 16, color: AppColor.Grey1, fontWeight: FontWeight.bold)
-                                    : const TextStyle(fontSize: 16, color: AppColor.Blue4, fontWeight: FontWeight.bold)
-                            ),
-                          ],
-                        )).toList(),
-                      ),
-                    ],
+                                style: macBookRentalStatus[i] == true
+                                     ? const TextStyle(fontSize: 16, color: AppColor.Grey1, fontWeight: FontWeight.bold)
+                                     : const TextStyle(fontSize: 16, color: AppColor.Blue4, fontWeight: FontWeight.bold)
+                              ),
+                            ],
+                          )).toList(),
+                        ),
+                        GridView.count(
+                          crossAxisCount: 4,
+                          children: lgGrams.map((i) => Column(
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  if (lgGramRentalStatus[i] == true) {
+                                    _showUnavailableDialog(context, "LG Gram", i);
+                                  } else {
+                                    _showModalBottomSheet(context, "LG Gram", i);
+                                  }
+                                },
+                                icon: lgGramRentalStatus[i] == true
+                                    ? const Icon(Icons.laptop_windows, color: AppColor.Grey1)
+                                    : const Icon(Icons.laptop_windows, color: AppColor.Blue4),
+                                iconSize: 65,
+                                padding: EdgeInsets.zero,
+                              ),
+                              Text(
+                                  "#$i",
+                                  style: lgGramRentalStatus[i] == true
+                                      ? const TextStyle(fontSize: 16, color: AppColor.Grey1, fontWeight: FontWeight.bold)
+                                      : const TextStyle(fontSize: 16, color: AppColor.Blue4, fontWeight: FontWeight.bold)
+                              ),
+                            ],
+                          )).toList(),
+                        ),
+                        GridView.count(
+                          crossAxisCount: 4,
+                          children: webCams.map((i) => Column(
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  if (webCamRentalStatus[i] == true) {
+                                    _showUnavailableDialog(context, "WebCam", i);
+                                  } else {
+                                    _showModalBottomSheet(context, "WebCam", i);
+                                  }
+                                },
+                                icon: webCamRentalStatus[i] == true
+                                    ? const Icon(Icons.photo_camera, color: AppColor.Grey1)
+                                    : const Icon(Icons.photo_camera, color: AppColor.Blue4),
+                                iconSize: 65,
+                                padding: EdgeInsets.zero,
+                              ),
+                              Text(
+                                  "#$i",
+                                  style: webCamRentalStatus[i] == true
+                                      ? const TextStyle(fontSize: 16, color: AppColor.Grey1, fontWeight: FontWeight.bold)
+                                      : const TextStyle(fontSize: 16, color: AppColor.Blue4, fontWeight: FontWeight.bold)
+                              ),
+                            ],
+                          )).toList(),
+                        ),
+                      ],
+                    ),
                   )
               )
             ],
@@ -171,7 +177,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
               ),
               const Text(
                 'Do you want to rent?',
-                style: TextStyle(fontSize: 20, color: AppColor.Blue4, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 22, color: AppColor.Blue4, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
               Row(
@@ -183,7 +189,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
                       Navigator.of(context).pop(); // AlertDialog 닫기
                     },
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(AppColor.Blue3),
+                      backgroundColor: MaterialStateProperty.all<Color>(AppColor.Blue),
                       foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
                       fixedSize: MaterialStateProperty.all<Size>(const Size(140, 50)),
                       shape: MaterialStateProperty.all<OutlinedBorder>(
@@ -203,8 +209,8 @@ class _EquipmentPageState extends State<EquipmentPage> {
                     },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                      foregroundColor: MaterialStateProperty.all<Color>(AppColor.Blue3),
-                      side: MaterialStateProperty.all<BorderSide>(const BorderSide(color: AppColor.Blue3, width: 2.0)),
+                      foregroundColor: MaterialStateProperty.all<Color>(AppColor.Blue),
+                      side: MaterialStateProperty.all<BorderSide>(const BorderSide(color: AppColor.Blue, width: 2.0)),
                       fixedSize: MaterialStateProperty.all<Size>(const Size(140, 50)),
                       shape: MaterialStateProperty.all<OutlinedBorder>(
                           RoundedRectangleBorder(
@@ -226,7 +232,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
     );
   }
 
-  void _showAlertDialog(BuildContext context, String equipmentType, int equipmentNum) {
+  void _showUnavailableDialog(BuildContext context, String equipmentType, int equipmentNum) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -257,7 +263,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
                       Navigator.of(context).pop(); // AlertDialog 닫기
                     },
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(AppColor.Blue3),
+                      backgroundColor: MaterialStateProperty.all<Color>(AppColor.Blue),
                       foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
                       fixedSize: MaterialStateProperty.all<Size>(const Size(140, 50)),
                       shape: MaterialStateProperty.all<OutlinedBorder>(

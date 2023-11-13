@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 class AppColor extends Color {
   AppColor(super.value);
 
-  static const Blue = Color(0xFF1864AB);
+  static const Blue = Color(0xFF1C7ED6);
   static const Blue1 = Color(0xFFF3F9FF);
   static const Blue2 = Color(0xFFA5D3F6);
-  static const Blue3 = Color(0xFF339AF0);
+  // static const Blue3 = Color(0xFF339AF0);
   static const Blue4 = Color(0xFF0D365D);
 
   static const Grey = Color(0xFF616161);
