@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:teamproject/room_page.dart';
 import 'package:teamproject/style.dart';
 import 'package:teamproject/equipment_page.dart';
+import 'package:teamproject/myPage.dart';
 
 void main() => runApp(const MyApp());
 
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
           // primaryColor: Colors.blue,
           // primarySwatch: Colors.indigo
       ),
-      home: HomePage(),
+      home: const HomePage(),
     );
   }
 }
@@ -34,8 +35,7 @@ class _HomePageState extends State<HomePage> {
     const Text('Index 0: Home', style: optionStyle),
     const EquipmentPage(),
     const RoomPage(),
-    // const Text('Index 2: Rooms', style: optionStyle),
-    const Text('Index 3: My Page', style: optionStyle),
+    const MyPage(),
   ];
 
   void _onItemTapped(int index) {
