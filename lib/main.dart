@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:teamproject/login_page.dart';
 import 'package:teamproject/room_page.dart';
 import 'package:teamproject/style.dart';
 import 'package:teamproject/equipment_page.dart';
@@ -11,11 +12,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
           // primaryColor: Colors.blue,
           // primarySwatch: Colors.indigo
       ),
-      home: HomePage(),
+      home: LogInPage(),
     );
   }
 }
@@ -31,7 +33,7 @@ class _HomePageState extends State<HomePage> {
   int _selectedPage = 0;
   static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static final List<Widget> _widgetOptions = <Widget>[
-    const Text('Index 0: Home', style: optionStyle),
+    const Text('Index 0: My Page', style: optionStyle),
     const EquipmentPage(),
     const RoomPage(),
     // const Text('Index 2: Rooms', style: optionStyle),
@@ -47,9 +49,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text('CAU rent'),
-      // ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedPage),
       ),
