@@ -35,14 +35,35 @@ class _LogInPageState extends State<LogInPage> {
           Padding(
             padding: const EdgeInsets.all(10),
             child: Image.asset(
-              'assets/CAU_rent.png', // 로고 넣어야 할 곳
+              'assets/CAU_rent.png',
               height: 120,
             ),
           ),
+
+          /*
           const Text(
             'CAU rent',
             style: TextStyle(fontSize: 28, color: AppColor.Blue, fontWeight: FontWeight.bold),
           ),
+           */
+
+
+          /* ----------------------------------- */
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomePage()),
+              );
+            },
+            child: const Text(
+              'CAU rent',
+              style: TextStyle(fontSize: 28, color: AppColor.Blue, fontWeight: FontWeight.bold),
+            ),
+          ),
+          /* ----------------------------------- */
+
+
           const SizedBox(height: 20),
           SizedBox(
             width: 280,
