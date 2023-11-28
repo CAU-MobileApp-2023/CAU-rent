@@ -13,20 +13,17 @@ class _MyPageState extends State<MyPage> {
     return Scaffold(
       body: Center(
         child:Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text('My Page',style:TextStyle(fontWeight:FontWeight.bold, fontSize: 30),),
-
-              const SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 70),
+              const Text('My Page', style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 40),
 
               Container(
-                width: 260,
-                height: 130,
+                width: 320,
+                height: 150,
                 decoration:BoxDecoration(
                     borderRadius: BorderRadius.circular(20.0),
-                    border: Border.all( width: 2, color: AppColor.Blue)
+                    border: Border.all(width: 3, color: AppColor.Blue)
                 ),
 
                 child: const Column(
@@ -37,8 +34,8 @@ class _MyPageState extends State<MyPage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Name',style:TextStyle(fontWeight:FontWeight.bold, fontSize: 15, color: AppColor.Blue),textAlign:TextAlign.left),
-                          Text('000',style:TextStyle(fontWeight:FontWeight.bold, fontSize: 15), textAlign:TextAlign.right),
+                          Text('Name',style:TextStyle(fontWeight:FontWeight.bold, fontSize: 18, color: AppColor.Blue),textAlign:TextAlign.left),
+                          Text('000',style:TextStyle(fontWeight:FontWeight.bold, fontSize: 18), textAlign:TextAlign.right),
                         ],
                       ),
                     ),
@@ -47,9 +44,9 @@ class _MyPageState extends State<MyPage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Student ID',style:TextStyle(fontWeight:FontWeight.bold,fontSize: 15, color: AppColor.Blue, height: 2.0),
+                          Text('Student ID',style:TextStyle(fontWeight:FontWeight.bold,fontSize: 18, color: AppColor.Blue, height: 2.0),
                               textAlign:TextAlign.left),
-                          Text('00000000',style:TextStyle(fontWeight:FontWeight.bold, fontSize: 15, height: 2.0),
+                          Text('00000000',style:TextStyle(fontWeight:FontWeight.bold, fontSize: 18, height: 2.0),
                               textAlign:TextAlign.right),
                         ],
                       ),
@@ -59,9 +56,9 @@ class _MyPageState extends State<MyPage> {
                       child:Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Phone',style:TextStyle(fontWeight:FontWeight.bold, fontSize: 15, color: AppColor.Blue, height: 2.0),
+                          Text('Phone', style:TextStyle(fontWeight:FontWeight.bold, fontSize: 18, color: AppColor.Blue, height: 2.0),
                               textAlign:TextAlign.left),
-                          Text('010-0000-0000',style:TextStyle(fontWeight:FontWeight.bold, fontSize: 15, height: 2.0),
+                          Text('010-0000-0000', style:TextStyle(fontWeight:FontWeight.bold, fontSize: 18, height: 2.0),
                               textAlign:TextAlign.right),
                         ],
                       ),
@@ -71,7 +68,7 @@ class _MyPageState extends State<MyPage> {
               ),
 
               const SizedBox(
-                height: 50,
+                height: 40,
               ),
 
               Container(
