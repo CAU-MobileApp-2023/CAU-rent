@@ -21,12 +21,12 @@ class _LogInPageState extends State<LogInPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: isLoggedIn ? const HomePage() : LogInScreen(),
+        child: isLoggedIn ? const HomePage() : logInScreen(),
       ),
     );
   }
 
-  Widget LogInScreen() {
+  Widget logInScreen() {
     final _formKey = GlobalKey<FormState>();
 
     return SingleChildScrollView(
@@ -188,17 +188,13 @@ class _LogInPageState extends State<LogInPage> {
                 style: TextStyle(fontSize: 20),
               ),
             ),
-
-            const SizedBox(height: 10),
-
           ],
         ),
       ),
     );
-
   }
 
-  void _performLogin() {
+  void _performLogin() {                                          // data
     String enteredId = emailController.text;
     String enteredPassword = passwordController.text;
 

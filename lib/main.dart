@@ -3,7 +3,7 @@ import 'package:teamproject/login_page.dart';
 import 'package:teamproject/room_page.dart';
 import 'package:teamproject/style.dart';
 import 'package:teamproject/equipment_page.dart';
-import 'package:teamproject/myPage.dart';
+import 'package:teamproject/mypage.dart';
 
 void main() => runApp(const MyApp());
 
@@ -12,12 +12,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-          // primaryColor: Colors.blue,
-          // primarySwatch: Colors.indigo
-      ),
       home: LogInPage(),
     );
   }
@@ -32,9 +28,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedPage = 0;
-  static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static final List<Widget> _widgetOptions = <Widget>[
-    const Text('Index 0: My Page', style: optionStyle),
+  static final List<Widget> _pages = <Widget>[
+    const Text('Index 0: My Page', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
     const EquipmentPage(),
     const RoomPage(),
     const MyPage(),
@@ -50,9 +45,9 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: _widgetOptions.elementAt(_selectedPage),
+        child: _pages.elementAt(_selectedPage),
       ),
-      bottomNavigationBar: Container(
+      bottomNavigationBar: SizedBox(
         height: 80,
         child: BottomNavigationBar(
           iconSize: 35,
@@ -62,7 +57,7 @@ class _HomePageState extends State<HomePage> {
                 padding: EdgeInsets.only(bottom: 2.0),
                 child: Icon(Icons.circle_notifications_outlined),
               ),
-              label: 'Home',
+              label: 'Notice',
             ),
             BottomNavigationBarItem(
               icon: Padding(

@@ -33,7 +33,7 @@ class _SignUpPageState extends State<SignUpPage> {
               children: [
                 const SizedBox(height: 10),
                 Image.asset(
-                  'assets/CAU_rent.png', // 로고 넣어야 할 곳
+                  'assets/CAU_rent.png',
                   height: 90,
                 ),
                 const SizedBox(height: 30),
