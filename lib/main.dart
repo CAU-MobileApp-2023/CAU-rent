@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:teamproject/notice_page.dart';
 import 'package:teamproject/login_page.dart';
 import 'package:teamproject/room_page.dart';
 import 'package:teamproject/style.dart';
@@ -29,7 +30,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedPage = 0;
   static final List<Widget> _pages = <Widget>[
-    const Text('Index 0: My Page', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+    const NoticePage(),
     const EquipmentPage(),
     const RoomPage(),
     const MyPage(),
