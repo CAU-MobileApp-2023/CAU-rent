@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:teamproject/main.dart';
+import 'package:teamproject/model/UserLoginData.dart';
 import 'package:teamproject/signup_page.dart';
 import 'package:teamproject/style.dart';
+import 'package:http/http.dart' as http;
 
 class LogInPage extends StatefulWidget {
   const LogInPage({super.key});
@@ -11,10 +15,7 @@ class LogInPage extends StatefulWidget {
 }
 
 class _LogInPageState extends State<LogInPage> {
-  Map<String, Map<String, String>> users = {};      // data
-
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  UserLoginData userData = UserLoginData();
   bool isLoggedIn = false;
 
   @override
@@ -70,7 +71,8 @@ class _LogInPageState extends State<LogInPage> {
             SizedBox(
               width: 280,
               child: TextFormField(
-                controller: emailController,
+                key: ValueKey(1),
+                keyboardType: TextInputType.emailAddress,
                 decoration: const InputDecoration(
                   labelText: 'Email',
                   hintText: '이메일을 입력하세요',
@@ -94,9 +96,12 @@ class _LogInPageState extends State<LogInPage> {
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter email.';
+                    return 'Please enter email';
                   }
                   return null;
+                },
+                onChanged: (value){
+                  userData.email = value;
                 },
               ),
             ),
@@ -106,7 +111,8 @@ class _LogInPageState extends State<LogInPage> {
             SizedBox(
               width: 280,
               child: TextFormField(
-                controller: passwordController,
+                key: ValueKey(1),
+                keyboardType: TextInputType.text,
                 decoration: const InputDecoration(
                   labelText: 'Password',
                   hintText: '비밀번호를 입력하세요',
@@ -131,9 +137,12 @@ class _LogInPageState extends State<LogInPage> {
                 obscureText: true,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter password.';
+                    return 'Please enter password';
                   }
                   return null;
+                },
+                onChanged: (value){
+                  userData.password = value;
                 },
               ),
             ),
@@ -141,10 +150,22 @@ class _LogInPageState extends State<LogInPage> {
             const SizedBox(height: 60),
 
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 if (_formKey.currentState!.validate()) {
-                  // 폼 검증 성공 시 로그인 수행
-                  _performLogin();
+                  var result = await http.post(
+                      Uri.parse('http://10.0.2.2:8000/users/login/'),
+                      body: jsonEncode(userData.toJson()),
+                      headers: {'content-type': 'application/json'}
+                  );
+                  if (result.statusCode == 200) {
+                    _showSnackBar('Successfully Logged In', Colors.green);
+                    setState(() {
+                      isLoggedIn = true;
+                    });
+                  }
+                  else {
+                    _showSnackBar('Invalid Email or Password', Colors.red);
+                  }
                 }
               },
               style: ButtonStyle(
@@ -169,7 +190,7 @@ class _LogInPageState extends State<LogInPage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => SignUpPage(users)),
+                  MaterialPageRoute(builder: (context) => SignUpPage()),
                 );
               },
               style: ButtonStyle(
@@ -194,25 +215,10 @@ class _LogInPageState extends State<LogInPage> {
     );
   }
 
-  void _performLogin() {                                          // data
-    String enteredId = emailController.text;
-    String enteredPassword = passwordController.text;
-
-    if (enteredId.isNotEmpty && enteredPassword.isNotEmpty) {
-      if (users.containsKey(enteredId) && users[enteredId]!['password'] == enteredPassword) {
-        _showSnackBar('로그인이 성공했습니다', Colors.green);
-        setState(() {
-          isLoggedIn = true;
-        });
-      } else {
-        _showSnackBar('아이디 또는 비밀번호가 잘못되었습니다', Colors.red);
-      }
-    }
-  }
-
   void _showSnackBar(String message, Color color) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
+        duration: const Duration(seconds: 2),
         content: Text(message),
         backgroundColor: color,
       ),
