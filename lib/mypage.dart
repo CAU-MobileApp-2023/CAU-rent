@@ -95,7 +95,7 @@ class _MyPageState extends State<MyPage> {
                 ),
               ),
 
-              const SizedBox(height: 40),
+              const SizedBox(height: 35),
 
               Container(
                 height: 1.0,
@@ -106,7 +106,7 @@ class _MyPageState extends State<MyPage> {
               const SizedBox(height: 30),
 
               const Text('Rental Status', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),),
-              const SizedBox(height: 30),
+              const SizedBox(height: 25),
 
               Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -117,7 +117,7 @@ class _MyPageState extends State<MyPage> {
                           children:[
                             const Text('MacBook',style:TextStyle(fontWeight:FontWeight.bold, fontSize: 16, color: AppColor.Blue),),
                             const SizedBox(
-                              height: 10,
+                              height: 8,
                             ),
                             Container(
                               height: 2.0,
@@ -125,7 +125,7 @@ class _MyPageState extends State<MyPage> {
                               color: AppColor.Blue,
                             ),
                             const SizedBox(
-                              height: 20,
+                              height: 14,
                             ),
                             const Icon(Icons.laptop_mac, color: AppColor.Blue4, size: 65),
 
@@ -141,7 +141,7 @@ class _MyPageState extends State<MyPage> {
                           children:[
                             const Text('LG gram',style:TextStyle(fontWeight:FontWeight.bold, fontSize: 16, color: AppColor.Blue),),
                             const SizedBox(
-                              height: 10,
+                              height: 8,
                             ),
                             Container(
                               height: 2.0,
@@ -149,7 +149,7 @@ class _MyPageState extends State<MyPage> {
                               color: AppColor.Blue,
                             ),
                             const SizedBox(
-                              height: 20,
+                              height: 14,
                             ),
                             const Icon(Icons.close_rounded, color: AppColor.Grey1, size: 65),
 
@@ -165,7 +165,7 @@ class _MyPageState extends State<MyPage> {
                           children:[
                             const Text('WebCam',style:TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColor.Blue)),
                             const SizedBox(
-                              height: 10,
+                              height: 8,
                             ),
                             Container(
                               height: 2.0,
@@ -173,7 +173,7 @@ class _MyPageState extends State<MyPage> {
                               color: AppColor.Blue,
                             ),
                             const SizedBox(
-                              height: 20,
+                              height: 14,
                             ),
                             const Icon(Icons.close_rounded, color: AppColor.Grey1, size: 65),
 
@@ -182,7 +182,30 @@ class _MyPageState extends State<MyPage> {
                       ),
                     ),
                   ]
-              )
+              ),
+
+              const SizedBox(height: 30),
+
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(AppColor.Blue),
+                  foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                  fixedSize: MaterialStateProperty.all<Size>(const Size(90, 30)),
+                  shape: MaterialStateProperty.all<OutlinedBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      )
+                  ),
+                ),
+                child: const Text(
+                  'Log Out',
+                  style: TextStyle(fontSize: 14),
+                ),
+              ),
+
             ]
         ),
       ),
