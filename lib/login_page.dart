@@ -157,7 +157,9 @@ class _LogInPageState extends State<LogInPage> {
                       headers: {'content-type': 'application/json'}
                   );
                   if (result.statusCode == 200) {
-                    // _showSnackBar('Successfully Logged In', Colors.green);
+                    Map<String, dynamic> responseData = json.decode(result.body);
+                    String email = responseData['user_data']['email'];
+
                     setState(() {
                       Navigator.push(
                         context,

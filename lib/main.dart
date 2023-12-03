@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:teamproject/notice_page.dart';
 import 'package:teamproject/login_page.dart';
+import 'package:teamproject/provider/User.dart';
 import 'package:teamproject/room_page.dart';
 import 'package:teamproject/style.dart';
 import 'package:teamproject/equipment_page.dart';
@@ -13,9 +15,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: LogInPage(),
+    return ChangeNotifierProvider(
+      create: (BuildContext context) => UserProvider(),
+      child: const MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: LogInPage(),
+      ),
     );
   }
 }
