@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:teamproject/style.dart';
+import 'package:intl/intl.dart';
 
 class MyPage extends StatefulWidget {
   const MyPage({Key? key}) : super(key: key);
@@ -8,6 +9,13 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> {
+
+  String getDuedate(){ //일단은 오늘 기준으로 한달 뒤를 반납일로 설정함.
+    DateTime due = DateTime.now().add(const Duration(days:30));
+    DateFormat formatter = DateFormat('yyyy-MM-dd');
+    return formatter.format(due);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,89 +105,55 @@ class _MyPageState extends State<MyPage> {
 
               const SizedBox(height: 30),
 
-
               const Text('Rental Status', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),),
-
-
               const SizedBox(height: 30),
-
 
               Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children:[
                     SizedBox(
                       width: 100,
-
                       child: Column(
                           children:[
                             const Text('MacBook',style:TextStyle(fontWeight:FontWeight.bold, fontSize: 16, color: AppColor.Blue),),
-
                             const SizedBox(
                               height: 10,
                             ),
-
                             Container(
                               height: 2.0,
                               width: 70.0,
                               color: AppColor.Blue,
                             ),
-
                             const SizedBox(
                               height: 20,
                             ),
-
                             const Icon(Icons.laptop_mac, color: AppColor.Blue4, size: 65),
 
-                            ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: AppColor.Blue4,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30.0),
-                                    )
-                                ),
-                                child: const Text('Return'),
-                                onPressed: () {
+                            Text(getDuedate(),style: TextStyle(fontWeight: FontWeight.bold),),
 
-                                }),
                           ]
                       ),
                     ),
-
 
                     SizedBox(
                       width: 100,
                       child: Column(
                           children:[
                             const Text('LG gram',style:TextStyle(fontWeight:FontWeight.bold, fontSize: 16, color: AppColor.Blue),),
-
                             const SizedBox(
                               height: 10,
                             ),
-
                             Container(
                               height: 2.0,
                               width: 70.0,
                               color: AppColor.Blue,
                             ),
-
                             const SizedBox(
                               height: 20,
                             ),
-
                             const Icon(Icons.close_rounded, color: AppColor.Grey1, size: 65),
 
-                            ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.white,
-                                    side: const BorderSide(color: Colors.grey, width:1),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30.0),
-                                    )
-                                ),
-                                child: const Text('Return', style: TextStyle(color: Colors.grey)),
-                                onPressed: () {
-
-                                }),
+                            Text('-'),
                           ]
                       ),
                     ),
@@ -190,35 +164,20 @@ class _MyPageState extends State<MyPage> {
                       child: Column(
                           children:[
                             const Text('WebCam',style:TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColor.Blue)),
-
                             const SizedBox(
                               height: 10,
                             ),
-
                             Container(
                               height: 2.0,
                               width: 70.0,
                               color: AppColor.Blue,
                             ),
-
                             const SizedBox(
                               height: 20,
                             ),
-
                             const Icon(Icons.close_rounded, color: AppColor.Grey1, size: 65),
 
-                            ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.white,
-                                    side: const BorderSide(color: Colors.grey, width:1),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30.0),
-                                    )
-                                ),
-                                child: const Text('Return', style: TextStyle(color: Colors.grey)),
-                                onPressed: () {
-
-                                }),
+                            Text('-'),
                           ]
                       ),
                     ),
