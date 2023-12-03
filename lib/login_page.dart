@@ -16,13 +16,12 @@ class LogInPage extends StatefulWidget {
 
 class _LogInPageState extends State<LogInPage> {
   UserLoginData userData = UserLoginData();
-  bool isLoggedIn = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: isLoggedIn ? const HomePage() : logInScreen(),
+        child: logInScreen(),
       ),
     );
   }
@@ -160,12 +159,15 @@ class _LogInPageState extends State<LogInPage> {
                   if (result.statusCode == 200) {
                     // _showSnackBar('Successfully Logged In', Colors.green);
                     setState(() {
-                      isLoggedIn = true;
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const HomePage()),
+                      );
                     });
                   } else if (result.statusCode == 404) {
                     _showSnackBar('Email address does not exist', Colors.red);
                   } else if (result.statusCode == 401) {
-                    _showSnackBar('Incorrect Password', Colors.red);
+                    _showSnackBar('Password is not correct', Colors.red);
                   } else {
                     _showSnackBar('Failed to Log In', Colors.red);
                   }
