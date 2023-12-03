@@ -57,7 +57,7 @@ class _LogInPageState extends State<LogInPage> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => HomePage()),
+                  MaterialPageRoute(builder: (context) => const HomePage()),
                 );
               },
               child: const Text(
@@ -71,7 +71,7 @@ class _LogInPageState extends State<LogInPage> {
             SizedBox(
               width: 280,
               child: TextFormField(
-                key: ValueKey(1),
+                key: const ValueKey(1),
                 keyboardType: TextInputType.emailAddress,
                 decoration: const InputDecoration(
                   labelText: 'Email',
@@ -96,7 +96,7 @@ class _LogInPageState extends State<LogInPage> {
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter email';
+                    return 'Please enter your email';
                   }
                   return null;
                 },
@@ -111,7 +111,7 @@ class _LogInPageState extends State<LogInPage> {
             SizedBox(
               width: 280,
               child: TextFormField(
-                key: ValueKey(1),
+                key: const ValueKey(2),
                 keyboardType: TextInputType.text,
                 decoration: const InputDecoration(
                   labelText: 'Password',
@@ -137,7 +137,7 @@ class _LogInPageState extends State<LogInPage> {
                 obscureText: true,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter password';
+                    return 'Please enter the password';
                   }
                   return null;
                 },
@@ -158,13 +158,16 @@ class _LogInPageState extends State<LogInPage> {
                       headers: {'content-type': 'application/json'}
                   );
                   if (result.statusCode == 200) {
-                    _showSnackBar('Successfully Logged In', Colors.green);
+                    // _showSnackBar('Successfully Logged In', Colors.green);
                     setState(() {
                       isLoggedIn = true;
                     });
-                  }
-                  else {
-                    _showSnackBar('Invalid Email or Password', Colors.red);
+                  } else if (result.statusCode == 404) {
+                    _showSnackBar('Email address does not exist', Colors.red);
+                  } else if (result.statusCode == 401) {
+                    _showSnackBar('Incorrect Password', Colors.red);
+                  } else {
+                    _showSnackBar('Failed to Log In', Colors.red);
                   }
                 }
               },
@@ -190,7 +193,7 @@ class _LogInPageState extends State<LogInPage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => SignUpPage()),
+                  MaterialPageRoute(builder: (context) => const SignUpPage()),
                 );
               },
               style: ButtonStyle(

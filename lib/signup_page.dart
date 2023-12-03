@@ -1,16 +1,20 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:teamproject/model/UserSignupData.dart';
 import 'package:teamproject/style.dart';
+import 'package:http/http.dart' as http;
 
 class SignUpPage extends StatefulWidget {
-  final Map<String, Map<String, String>> users;
-
-  const SignUpPage(this.users, {super.key});
+  const SignUpPage({super.key});
 
   @override
   State<SignUpPage> createState() => _SignUpPageState();
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  UserSignupData userData = UserSignupData();
+
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
@@ -42,7 +46,10 @@ class _SignUpPageState extends State<SignUpPage> {
                   width: 280,
                   height: 45,
                   child: TextFormField(
+                    key: const ValueKey(1),
+
                     controller: emailController,
+
                     decoration: InputDecoration(
                       labelText: 'Email',
                       labelStyle: const TextStyle(
@@ -61,6 +68,9 @@ class _SignUpPageState extends State<SignUpPage> {
                       prefixIcon: const Icon(Icons.account_circle),
                       prefixIconColor: AppColor.Blue,
                     ),
+                    onChanged: (value){
+                      userData.email = value;
+                    },
                   ),
                 ),
 
@@ -70,6 +80,8 @@ class _SignUpPageState extends State<SignUpPage> {
                   width: 280,
                   height: 45,
                   child: TextFormField(
+                    key: const ValueKey(2),
+
                     controller: passwordController,
                     decoration: InputDecoration(
                       labelText: 'Password',
@@ -90,6 +102,9 @@ class _SignUpPageState extends State<SignUpPage> {
                       prefixIconColor: AppColor.Blue,
                     ),
                     obscureText: true,
+                    onChanged: (value){
+                      userData.password = value;
+                    },
                   ),
                 ),
 
@@ -127,6 +142,8 @@ class _SignUpPageState extends State<SignUpPage> {
                   width: 280,
                   height: 45,
                   child: TextFormField(
+                    key: const ValueKey(3),
+
                     controller: nameController,
                     decoration: InputDecoration(
                       labelText: 'Name',
@@ -146,6 +163,9 @@ class _SignUpPageState extends State<SignUpPage> {
                       prefixIcon: const Icon(Icons.person),
                       prefixIconColor: AppColor.Blue,
                     ),
+                    onChanged: (value){
+                      userData.name = value;
+                    },
                   ),
                 ),
 
@@ -155,6 +175,8 @@ class _SignUpPageState extends State<SignUpPage> {
                   width: 280,
                   height: 45,
                   child: TextFormField(
+                    key: const ValueKey(4),
+
                     controller: studentIdController,
                     decoration: InputDecoration(
                       labelText: 'Student ID',
@@ -174,6 +196,9 @@ class _SignUpPageState extends State<SignUpPage> {
                       prefixIcon: const Icon(Icons.badge),
                       prefixIconColor: AppColor.Blue,
                     ),
+                    onChanged: (value){
+                      userData.studentId = value;
+                    },
                   ),
                 ),
 
@@ -183,6 +208,8 @@ class _SignUpPageState extends State<SignUpPage> {
                   width: 280,
                   height: 45,
                   child: TextFormField(
+                    key: const ValueKey(5),
+
                     controller: phoneController,
                     decoration: InputDecoration(
                       labelText: 'Phone',
@@ -202,16 +229,53 @@ class _SignUpPageState extends State<SignUpPage> {
                       prefixIcon: const Icon(Icons.phone),
                       prefixIconColor: AppColor.Blue,
                     ),
+                    onChanged: (value){
+                      userData.phoneNumber = value;
+                    },
                   ),
                 ),
 
                 const SizedBox(height: 30),
 
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      // 폼 검증 성공 시 회원가입 수행
-                      _performRegistration();
+                      String _email = emailController.text;
+                      String _password = passwordController.text;
+                      String _confirmPassword = confirmPasswordController.text;
+                      String _name = nameController.text;
+                      String _studentId = studentIdController.text;
+                      String _phoneNumber = phoneController.text;
+
+                      if (_email.isEmpty) {
+                        _showSnackBar('Please enter your email', Colors.red);
+                      } else if (_password.isEmpty) {
+                        _showSnackBar('Please enter the password', Colors.red);
+                      } else if (_confirmPassword.isEmpty) {
+                        _showSnackBar('Please re-enter the password', Colors.red);
+                      } else if (_name.isEmpty) {
+                        _showSnackBar('Please enter your name', Colors.red);
+                      } else if (_studentId.isEmpty) {
+                        _showSnackBar('Please enter your student ID', Colors.red);
+                      } else if (_phoneNumber.isEmpty) {
+                        _showSnackBar('Please enter your phone number', Colors.red);
+                      } else if (_password != _confirmPassword) {
+                        _showSnackBar('Please re-confirm the password', Colors.red);
+                      } else {
+
+                        userData.department = '소프트웨어학부';
+                        var result = await http.post(
+                            Uri.parse('http://10.0.2.2:8000/users/signup/'),
+                            body: jsonEncode(userData.toJson()),
+                            headers: {'content-type': 'application/json'}
+                        );
+                        if (result.statusCode == 201) {
+                          _showSnackBar('Successfully Signed Up', Colors.green);
+                          Navigator.pop(context);
+                        } else {
+                          _showSnackBar('Failed to Sign Up', Colors.red);
+                        }
+                      }
                     }
                   },
                   style: ButtonStyle(
@@ -229,6 +293,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     style: TextStyle(fontSize: 20),
                   ),
                 ),
+
                 const SizedBox(height: 12),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -252,47 +317,15 @@ class _SignUpPageState extends State<SignUpPage> {
               ],
             ),
           ),
-
         ),
       ),
     );
   }
 
-  void _performRegistration() {
-    String newEmail = emailController.text;
-    String newPassword = passwordController.text;
-    String confirmPassword = confirmPasswordController.text;
-    String name = nameController.text;
-    String studentId = studentIdController.text;
-    String phoneNumber = phoneController.text;
-
-    if (newEmail.isNotEmpty &&
-        newPassword.isNotEmpty &&
-        confirmPassword.isNotEmpty &&
-        name.isNotEmpty &&
-        studentId.isNotEmpty &&
-        phoneNumber.isNotEmpty) {
-      if (newPassword == confirmPassword) {
-        widget.users[newEmail] = {
-          'password': newPassword,
-          'name': name,
-          'studentId': studentId,
-        };
-
-        _showSnackBar('회원가입에 성공했습니다', Colors.green);
-
-        Navigator.pop(context);
-      } else {
-        _showSnackBar('비밀번호가 일치하지 않습니다', Colors.red);
-      }
-    } else {
-      _showSnackBar('모든 입력 필드를 작성하세요', Colors.red);
-    }
-  }
-
   void _showSnackBar(String message, Color color) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
+        duration: const Duration(seconds: 2),
         content: Text(message),
         backgroundColor: color,
       ),
