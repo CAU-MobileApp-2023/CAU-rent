@@ -11,7 +11,7 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  TextEditingController idController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
   TextEditingController nameController = TextEditingController();
@@ -20,207 +20,246 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
+    final _formKey = GlobalKey<FormState>();
+
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(height: 10),
-              Image.asset(
-                'assets/CAU_rent.png', // 로고 넣어야 할 곳
-                height: 90,
-              ),
-              const SizedBox(height: 30),
-              Container(
-                width: 280,
-                height: 45,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  border: Border.all(color: AppColor.Blue),
+          child: Form(
+          key: _formKey,
+
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(height: 10),
+                Image.asset(
+                  'assets/CAU_rent.png',
+                  height: 90,
                 ),
-                child: TextField(
-                  controller: idController,
-                  decoration: const InputDecoration(
-                    hintText: 'ID',
-                    hintStyle: TextStyle(
-                      color: AppColor.Blue,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    prefixIcon: Icon(Icons.account_circle),
-                    prefixIconColor: AppColor.Blue,
-                    border: InputBorder.none,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 15),
-              Container(
-                width: 280,
-                height: 45,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  border: Border.all(color: AppColor.Blue),
-                ),
-                child: TextField(
-                  controller: passwordController,
-                  decoration: const InputDecoration(
-                    hintText: 'Password',
-                    hintStyle: TextStyle(
-                      color: AppColor.Blue,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    prefixIcon: Icon(Icons.lock),
-                    prefixIconColor: AppColor.Blue,
-                    border: InputBorder.none,
-                  ),
-                  obscureText: true,
-                ),
-              ),
-              const SizedBox(height: 15),
-              Container(
-                width: 280,
-                height: 45,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  border: Border.all(color: AppColor.Blue),
-                ),
-                child: TextField(
-                  controller: confirmPasswordController,
-                  decoration: const InputDecoration(
-                    hintText: 'Confirm Password',
-                    hintStyle: TextStyle(
-                      color: AppColor.Blue,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    prefixIcon: Icon(Icons.vpn_key),
-                    prefixIconColor: AppColor.Blue,
-                    border: InputBorder.none,
-                  ),
-                  obscureText: true,
-                ),
-              ),
-              const SizedBox(height: 15),
-              Container(
-                width: 280,
-                height: 45,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  border: Border.all(color: AppColor.Blue),
-                ),
-                child: TextField(
-                  controller: nameController,
-                  decoration: const InputDecoration(
-                    hintText: 'Name',
-                    hintStyle: TextStyle(
-                      color: AppColor.Blue,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    prefixIcon: Icon(Icons.person),
-                    prefixIconColor: AppColor.Blue,
-                    border: InputBorder.none,
-                  ),
-                  obscureText: true,
-                ),
-              ),
-              const SizedBox(height: 15),
-              Container(
-                width: 280,
-                height: 45,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  border: Border.all(color: AppColor.Blue),
-                ),
-                child: TextField(
-                  controller: studentIdController,
-                  decoration: const InputDecoration(
-                    hintText: 'Student ID',
-                    hintStyle: TextStyle(
-                      color: AppColor.Blue,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    prefixIcon: Icon(Icons.badge),
-                    prefixIconColor: AppColor.Blue,
-                    border: InputBorder.none,
-                  ),
-                  obscureText: true,
-                ),
-              ),
-              const SizedBox(height: 15),
-              Container(
-                width: 280,
-                height: 45,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  border: Border.all(color: AppColor.Blue),
-                ),
-                child: TextField(
-                  controller: phoneController,
-                  decoration: const InputDecoration(
-                    hintText: 'Phone',
-                    hintStyle: TextStyle(
-                      color: AppColor.Blue,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    prefixIcon: Icon(Icons.phone),
-                    prefixIconColor: AppColor.Blue,
-                    border: InputBorder.none,
-                  ),
-                  obscureText: true,
-                ),
-              ),
-              const SizedBox(height: 30),
-              ElevatedButton(
-                onPressed: () => _performRegistration(),
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(AppColor.Blue),
-                  foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                  fixedSize: MaterialStateProperty.all<Size>(const Size(280, 50)),
-                  shape: MaterialStateProperty.all<OutlinedBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                      )
-                  ),
-                ),
-                child: const Text(
-                  'Sign Up',
-                  style: TextStyle(fontSize: 20),
-                ),
-              ),
-              const SizedBox(height: 12),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    'Already have an account?',
-                    style: TextStyle(fontSize: 12),
-                  ),
-                  const SizedBox(width: 8),
-                  InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text(
-                      'Log In',
-                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                const SizedBox(height: 30),
+
+                SizedBox(
+                  width: 280,
+                  height: 45,
+                  child: TextFormField(
+                    controller: emailController,
+                    decoration: InputDecoration(
+                      labelText: 'Email',
+                      labelStyle: const TextStyle(
+                        color: AppColor.Blue,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      enabledBorder:  OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        borderSide: const BorderSide(color: AppColor.Blue),
+                      ),
+                      focusedBorder:  OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        borderSide: const BorderSide(color: AppColor.Blue),
+                      ),
+                      prefixIcon: const Icon(Icons.account_circle),
+                      prefixIconColor: AppColor.Blue,
                     ),
                   ),
-                ],
-              ),
-            ],
+                ),
+
+                const SizedBox(height: 15),
+
+                SizedBox(
+                  width: 280,
+                  height: 45,
+                  child: TextFormField(
+                    controller: passwordController,
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      labelStyle: const TextStyle(
+                        color: AppColor.Blue,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      enabledBorder:  OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        borderSide: const BorderSide(color: AppColor.Blue),
+                      ),
+                      focusedBorder:  OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        borderSide: const BorderSide(color: AppColor.Blue),
+                      ),
+                      prefixIcon: const Icon(Icons.lock),
+                      prefixIconColor: AppColor.Blue,
+                    ),
+                    obscureText: true,
+                  ),
+                ),
+
+                const SizedBox(height: 15),
+
+                SizedBox(
+                  width: 280,
+                  height: 45,
+                  child: TextFormField(
+                    controller: confirmPasswordController,
+                    decoration: InputDecoration(
+                      labelText: 'Confirm Password',
+                      labelStyle: const TextStyle(
+                        color: AppColor.Blue,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      enabledBorder:  OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        borderSide: const BorderSide(color: AppColor.Blue),
+                      ),
+                      focusedBorder:  OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        borderSide: const BorderSide(color: AppColor.Blue),
+                      ),
+                      prefixIcon: const Icon(Icons.vpn_key),
+                      prefixIconColor: AppColor.Blue,
+                    ),
+                    obscureText: true,
+                  ),
+                ),
+                const SizedBox(height: 15),
+
+                SizedBox(
+                  width: 280,
+                  height: 45,
+                  child: TextFormField(
+                    controller: nameController,
+                    decoration: InputDecoration(
+                      labelText: 'Name',
+                      labelStyle: const TextStyle(
+                        color: AppColor.Blue,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      enabledBorder:  OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        borderSide: const BorderSide(color: AppColor.Blue),
+                      ),
+                      focusedBorder:  OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        borderSide: const BorderSide(color: AppColor.Blue),
+                      ),
+                      prefixIcon: const Icon(Icons.person),
+                      prefixIconColor: AppColor.Blue,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 15),
+
+                SizedBox(
+                  width: 280,
+                  height: 45,
+                  child: TextFormField(
+                    controller: studentIdController,
+                    decoration: InputDecoration(
+                      labelText: 'Student ID',
+                      labelStyle: const TextStyle(
+                        color: AppColor.Blue,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      enabledBorder:  OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        borderSide: const BorderSide(color: AppColor.Blue),
+                      ),
+                      focusedBorder:  OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        borderSide: const BorderSide(color: AppColor.Blue),
+                      ),
+                      prefixIcon: const Icon(Icons.badge),
+                      prefixIconColor: AppColor.Blue,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 15),
+
+                SizedBox(
+                  width: 280,
+                  height: 45,
+                  child: TextFormField(
+                    controller: phoneController,
+                    decoration: InputDecoration(
+                      labelText: 'Phone',
+                      labelStyle: const TextStyle(
+                        color: AppColor.Blue,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      enabledBorder:  OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        borderSide: const BorderSide(color: AppColor.Blue),
+                      ),
+                      focusedBorder:  OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        borderSide: const BorderSide(color: AppColor.Blue),
+                      ),
+                      prefixIcon: const Icon(Icons.phone),
+                      prefixIconColor: AppColor.Blue,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 30),
+
+                ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      // 폼 검증 성공 시 회원가입 수행
+                      _performRegistration();
+                    }
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(AppColor.Blue),
+                    foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                    fixedSize: MaterialStateProperty.all<Size>(const Size(280, 50)),
+                    shape: MaterialStateProperty.all<OutlinedBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        )
+                    ),
+                  ),
+                  child: const Text(
+                    'Sign Up',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Already have an account?',
+                      style: TextStyle(fontSize: 12),
+                    ),
+                    const SizedBox(width: 8),
+                    InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text(
+                        'Log In',
+                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
+
         ),
       ),
     );
   }
 
   void _performRegistration() {
-    String newEmail = idController.text;
+    String newEmail = emailController.text;
     String newPassword = passwordController.text;
     String confirmPassword = confirmPasswordController.text;
     String name = nameController.text;
