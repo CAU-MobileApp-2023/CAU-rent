@@ -1,8 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:teamproject/main.dart';
 import 'package:teamproject/model/UserLoginData.dart';
+import 'package:teamproject/provider/User.dart';
 import 'package:teamproject/signup_page.dart';
 import 'package:teamproject/style.dart';
 import 'package:http/http.dart' as http;
@@ -158,14 +160,7 @@ class _LogInPageState extends State<LogInPage> {
                   );
                   if (result.statusCode == 200) {
                     Map<String, dynamic> responseData = json.decode(result.body);
-                    String email = responseData['user_data']['email'];
-
-                    setState(() {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const HomePage()),
-                      );
-                    });
+                    _handleLoginSuccess(responseData);
                   } else if (result.statusCode == 404) {
                     _showSnackBar('Email address does not exist', Colors.red);
                   } else if (result.statusCode == 401) {
@@ -219,6 +214,17 @@ class _LogInPageState extends State<LogInPage> {
           ],
         ),
       ),
+    );
+  }
+
+  void _handleLoginSuccess(Map<String, dynamic> responseData) {
+    context.read<UserProvider>().setUserEmail(responseData['user_data']['email']);
+    context.read<UserProvider>().setUserName(responseData['user_data']['name']);
+    context.read<UserProvider>().setUserStudentId(responseData['user_data']['student_id']);
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const HomePage()),
     );
   }
 

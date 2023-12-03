@@ -10,7 +10,7 @@ class MyPage extends StatefulWidget {
 
 class _MyPageState extends State<MyPage> {
 
-  String getDuedate(){ //일단은 오늘 기준으로 한달 뒤를 반납일로 설정함.
+  String getDuedate() { // 일단은 오늘 기준으로 한달 뒤를 반납일로 설정함.
     DateTime due = DateTime.now().add(const Duration(days:30));
     DateFormat formatter = DateFormat('yyyy-MM-dd');
     return formatter.format(due);
@@ -20,7 +20,7 @@ class _MyPageState extends State<MyPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child:Column(
+        child: Column(
             children: [
               const SizedBox(height: 70),
               const Text('My Page', style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold)),
@@ -105,7 +105,7 @@ class _MyPageState extends State<MyPage> {
 
               const SizedBox(height: 30),
 
-              const Text('Rental Status', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),),
+              const Text('Rental Status', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25)),
               const SizedBox(height: 25),
 
               Row(
@@ -115,7 +115,7 @@ class _MyPageState extends State<MyPage> {
                       width: 100,
                       child: Column(
                           children:[
-                            const Text('MacBook',style:TextStyle(fontWeight:FontWeight.bold, fontSize: 16, color: AppColor.Blue),),
+                            const Text('MacBook', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColor.Blue)),
                             const SizedBox(
                               height: 8,
                             ),
@@ -129,8 +129,7 @@ class _MyPageState extends State<MyPage> {
                             ),
                             const Icon(Icons.laptop_mac, color: AppColor.Blue4, size: 65),
 
-                            Text(getDuedate(),style: TextStyle(fontWeight: FontWeight.bold),),
-
+                            Text(getDuedate(), style: const TextStyle(fontWeight: FontWeight.bold)),
                           ]
                       ),
                     ),
@@ -139,7 +138,7 @@ class _MyPageState extends State<MyPage> {
                       width: 100,
                       child: Column(
                           children:[
-                            const Text('LG gram',style:TextStyle(fontWeight:FontWeight.bold, fontSize: 16, color: AppColor.Blue),),
+                            const Text('LG gram', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColor.Blue)),
                             const SizedBox(
                               height: 8,
                             ),
@@ -153,7 +152,7 @@ class _MyPageState extends State<MyPage> {
                             ),
                             const Icon(Icons.close_rounded, color: AppColor.Grey1, size: 65),
 
-                            Text('-'),
+                            const Text('-'),
                           ]
                       ),
                     ),
@@ -163,7 +162,7 @@ class _MyPageState extends State<MyPage> {
                       width: 100,
                       child: Column(
                           children:[
-                            const Text('WebCam',style:TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColor.Blue)),
+                            const Text('WebCam', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColor.Blue)),
                             const SizedBox(
                               height: 8,
                             ),
@@ -177,18 +176,19 @@ class _MyPageState extends State<MyPage> {
                             ),
                             const Icon(Icons.close_rounded, color: AppColor.Grey1, size: 65),
 
-                            Text('-'),
+                            const Text('-'),
                           ]
                       ),
                     ),
                   ]
               ),
 
-              const SizedBox(height: 30),
+              const SizedBox(height: 25),
 
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
+                  // Navigator.of(context).popUntil((route) => route.isFirst);
                 },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color>(AppColor.Blue),
@@ -205,7 +205,6 @@ class _MyPageState extends State<MyPage> {
                   style: TextStyle(fontSize: 14),
                 ),
               ),
-
             ]
         ),
       ),
