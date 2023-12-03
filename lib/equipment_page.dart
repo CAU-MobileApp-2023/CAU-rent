@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:teamproject/style.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class EquipmentPage extends StatefulWidget {
   const EquipmentPage({super.key});
@@ -77,10 +78,10 @@ class _EquipmentPageState extends State<EquipmentPage> {
                                 padding: EdgeInsets.zero,
                               ),
                               Text(
-                                "#$i",
-                                style: macBookRentalStatus[i] == true
-                                     ? const TextStyle(fontSize: 16, color: AppColor.Grey1, fontWeight: FontWeight.bold)
-                                     : const TextStyle(fontSize: 16, color: AppColor.Blue4, fontWeight: FontWeight.bold)
+                                  "#$i",
+                                  style: macBookRentalStatus[i] == true
+                                      ? const TextStyle(fontSize: 16, color: AppColor.Grey1, fontWeight: FontWeight.bold)
+                                      : const TextStyle(fontSize: 16, color: AppColor.Blue4, fontWeight: FontWeight.bold)
                               ),
                             ],
                           )).toList(),
@@ -150,87 +151,183 @@ class _EquipmentPageState extends State<EquipmentPage> {
   }
 
   void _showModalBottomSheet(BuildContext context, String equipmentType, int equipmentNum) {
+    DateTimeRange? selectedDateRange;
+    bool isDateSelected = false; // 날짜 선택 상태 추적
+
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       builder: (BuildContext context) {
-        return Container(
-          height: 480,
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(15.0)),
-            color: AppColor.Blue1,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                '$equipmentType #$equipmentNum',
-                style: const TextStyle(fontSize: 32, color: AppColor.Blue, fontWeight: FontWeight.bold),
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Container(
+              height: 480,
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(15.0)),
+                color: AppColor.Blue1,
               ),
-              const SizedBox(height: 20),
-              Container(width: 340, height: 180, color: Colors.white),
-              const SizedBox(height: 20),
-              const Text(
-                '대여하시겠습니까?',
-                style: TextStyle(fontSize: 32, color: AppColor.Blue4, fontWeight: FontWeight.bold),
-              ),
-              const Text(
-                'Do you want to rent?',
-                style: TextStyle(fontSize: 22, color: AppColor.Blue4, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  TextButton(
-                    onPressed: () {
-                      // equipmentType, equipmentNum
-                      Navigator.of(context).pop(); // AlertDialog 닫기
-                    },
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(AppColor.Blue),
-                      foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                      fixedSize: MaterialStateProperty.all<Size>(const Size(140, 50)),
-                      shape: MaterialStateProperty.all<OutlinedBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0), // 버튼의 모서리를 둥글게
-                          )
+                  Text(
+                    '$equipmentType #$equipmentNum',
+                    style: const TextStyle(fontSize: 32, color: AppColor.Blue, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 20),
+                  Container(width: 340, height: 180, color: Colors.white),
+                  const SizedBox(height: 20),
+                  const Text(
+                    '대여하시겠습니까?',
+                    style: TextStyle(fontSize: 32, color: AppColor.Blue4, fontWeight: FontWeight.bold),
+                  ),
+                  const Text(
+                    'Do you want to rent?',
+                    style: TextStyle(fontSize: 22, color: AppColor.Blue4, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 10),
+                  // 날짜 선택 버튼
+                  if (!isDateSelected)
+                    TextButton(
+                      onPressed: () {
+                        _showDatePickerDialog(context, (DateTimeRange? range) {
+                          if (range != null) {
+                            setState(() {
+                              selectedDateRange = range;
+                              isDateSelected = true;
+                            });
+                          }
+                        });
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(AppColor.Blue),
+                        foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                        fixedSize: MaterialStateProperty.all<Size>(const Size(140, 50)),
+                        shape: MaterialStateProperty.all<OutlinedBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            )
+                        ),
+                      ),
+                      child: const Text(
+                        'Select Period',
+                        style: TextStyle(fontSize: 16),
                       ),
                     ),
-                    child: const Text(
-                      'Confirm',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop(); // AlertDialog 닫기
-                    },
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                      foregroundColor: MaterialStateProperty.all<Color>(AppColor.Blue),
-                      side: MaterialStateProperty.all<BorderSide>(const BorderSide(color: AppColor.Blue, width: 2.0)),
-                      fixedSize: MaterialStateProperty.all<Size>(const Size(140, 50)),
-                      shape: MaterialStateProperty.all<OutlinedBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0), // 버튼의 모서리를 둥글게
-                          )
+                  // 선택된 날짜 범위 표시
+                  if (selectedDateRange != null)
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'Selected Period: ${selectedDateRange?.start.toLocal().toString().split(' ')[0]} - ${selectedDateRange?.end.toLocal().toString().split(' ')[0]}',
+                        style: const TextStyle(fontSize: 16, color: AppColor.Blue4),
                       ),
                     ),
-                    child: const Text(
-                      'Cancel',
-                      style: TextStyle(fontSize: 20),
+                  // 'Confirm' 및 'Cancel' 버튼 (날짜가 선택된 경우에만 활성화)
+                  if (isDateSelected)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            // 대여 처리 로직
+                            Navigator.of(context).pop();
+                          },
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(AppColor.Blue),
+                            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                            fixedSize: MaterialStateProperty.all<Size>(const Size(120, 40)),
+                            shape: MaterialStateProperty.all<OutlinedBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                )
+                            ),
+                          ),
+                          child: const Text('Confirm', style: TextStyle(fontSize: 20)),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(AppColor.Blue),
+                            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                            fixedSize: MaterialStateProperty.all<Size>(const Size(120, 40)),
+                            shape: MaterialStateProperty.all<OutlinedBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                )
+                            ),
+                          ),
+                          child: const Text('Cancel', style: TextStyle(fontSize: 20)),
+                        ),
+                      ],
                     ),
-                  ),
+                  const SizedBox(height: 20),
                 ],
               ),
-            ],
-          ),
+            );
+          },
         );
       },
     );
   }
+
+  void _showDatePickerDialog(BuildContext context, Function(DateTimeRange?) onSelect) {
+    DateTime? selectedStartDate;
+    DateTime? selectedEndDate;
+    DateTime maxDate = DateTime.now().add(const Duration(days: 90)); // 초기 maxDate 설정
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder( // StatefulBuilder 추가
+            builder: (context, setState) {
+              return AlertDialog(
+                title: const Text('Select Date Range'),
+                content: Container(
+                  width: double.maxFinite,
+                  child: SfDateRangePicker(
+                    onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
+                      if (args.value is PickerDateRange) {
+                        final PickerDateRange range = args.value;
+                        selectedStartDate = range.startDate;
+                        selectedEndDate = range.endDate ?? range.startDate!.add(const Duration(days: 1));
+
+                        // 시작 날짜가 선택되면 maxDate 업데이트
+                        if (selectedStartDate != null) {
+                          setState(() {
+                            maxDate = selectedStartDate!.add(const Duration(days: 7));
+                          });
+                        }
+                      }
+                    },
+                    selectionMode: DateRangePickerSelectionMode.range,
+                    minDate: DateTime.now(),
+                    maxDate: maxDate, // 동적으로 변경된 maxDate 사용
+                  ),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text('OK'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      onSelect(selectedStartDate != null && selectedEndDate != null
+                          ? DateTimeRange(start: selectedStartDate!, end: selectedEndDate!)
+                          : null);
+                    },
+                  ),
+                ],
+              );
+            }
+        );
+      },
+    );
+  }
+
+
+
+
 
   void _showUnavailableDialog(BuildContext context, String equipmentType, int equipmentNum) {
     showDialog(
