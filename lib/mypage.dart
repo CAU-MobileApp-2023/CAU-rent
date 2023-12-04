@@ -42,7 +42,7 @@ class _MyPageState extends State<MyPage> {
       List<dynamic> responseData = jsonDecode(result.body);
       for (var data in responseData) {
         int deviceId = int.parse(data['device'].toString());
-        if (27 < deviceId && deviceId <= 53) {
+        if (27 < deviceId && deviceId <= 27 + 22) {
           dueDate = data['end_date'].toString().substring(0, 10);
           rentalStatus[1] = true;
         }
@@ -60,7 +60,7 @@ class _MyPageState extends State<MyPage> {
       List<dynamic> responseData = jsonDecode(result.body);
       for (var data in responseData) {
         int deviceId = int.parse(data['device'].toString());
-        if (deviceId > 53) {
+        if (deviceId > 27 + 22) {
           dueDate = data['end_date'].toString().substring(0, 10);
           rentalStatus[2] = true;
         }
@@ -190,7 +190,6 @@ class _MyPageState extends State<MyPage> {
                                     style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
                                   );
                                 }
-                                // return CircularProgressIndicator();
                                 return const Text('-', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15));
                               },
                             ),

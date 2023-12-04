@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:teamproject/style.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:http/http.dart' as http;
 
 class EquipmentPage extends StatefulWidget {
   const EquipmentPage({super.key});
@@ -10,21 +13,52 @@ class EquipmentPage extends StatefulWidget {
 }
 
 class _EquipmentPageState extends State<EquipmentPage> {
-  late Map<int, bool> macBookRentalStatus;
-  late Map<int, bool> lgGramRentalStatus;
-  late Map<int, bool> webCamRentalStatus;
+  late Map<int, bool> macBookAvailability;
+  late Map<int, bool> lgGramAvailability;
+  late Map<int, bool> webCamAvailability;
 
   final macBooks = List.generate(27, (i) => i + 1);
-  final lgGrams = List.generate(26, (i) => i + 1);
-  final webCams = List.generate(130, (i) => i + 1);
+  final lgGrams = List.generate(22, (i) => i + 1);
+  final webCams = List.generate(19, (i) => i + 1);
 
   @override
   void initState() {
     super.initState();
-    // 각 장비 대여 상태 저장
-    macBookRentalStatus = { for (var item in macBooks) item : item < 10 };
-    lgGramRentalStatus = { for (var item in lgGrams) item : item < 10 };
-    webCamRentalStatus = { for (var item in webCams) item : item < 10 };
+    macBookAvailability = { for (var item in macBooks) item : true };
+    lgGramAvailability = { for (var item in lgGrams) item : true };
+    webCamAvailability = { for (var item in webCams) item : true };
+  }
+
+  Future<void> _setRentalStatus() async {
+    for (var i in macBooks) {
+      var result = await http.get(
+          Uri.parse('http://10.0.2.2:8000/devices/availability/MacBook Air/$i/')
+      );
+      if (result.statusCode == 200) {
+        List<dynamic> responseData = jsonDecode(result.body);
+        macBookAvailability[i] = responseData[0]['is_available'];
+      }
+    }
+
+    for (var i in lgGrams) {
+      var result = await http.get(
+          Uri.parse('http://10.0.2.2:8000/devices/availability/LG Gram/$i/')
+      );
+      if (result.statusCode == 200) {
+        List<dynamic> responseData = jsonDecode(result.body);
+        lgGramAvailability[i] = responseData[0]['is_available'];
+      }
+    }
+
+    for (var i in webCams) {
+      var result = await http.get(
+          Uri.parse('http://10.0.2.2:8000/devices/availability/WebCam/$i/')
+      );
+      if (result.statusCode == 200) {
+        List<dynamic> responseData = jsonDecode(result.body);
+        webCamAvailability[i] = responseData[0]['is_available'];
+      }
+    }
   }
 
   @override
@@ -41,8 +75,8 @@ class _EquipmentPageState extends State<EquipmentPage> {
                 padding: EdgeInsets.symmetric(horizontal: 25),
                 child: TabBar(
                     labelStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    labelColor: AppColor.Blue,                // 선택된 탭의 색상
-                    unselectedLabelColor: AppColor.Blue2,     // 선택되지 않은 탭의 색상
+                    labelColor: AppColor.Blue,
+                    unselectedLabelColor: AppColor.Blue2,
                     indicatorSize: TabBarIndicatorSize.label,
                     indicator: UnderlineTabIndicator(
                       borderSide: BorderSide(width: 3, color: AppColor.Blue),
@@ -54,96 +88,116 @@ class _EquipmentPageState extends State<EquipmentPage> {
                     ]
                 ),
               ),
-              Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: TabBarView(
+
+
+              FutureBuilder<void>(
+                future: _setRentalStatus(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState != ConnectionState.done) {
+                    return const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        GridView.count(
-                          crossAxisCount: 4,
-                          children: macBooks.map((i) => Column(
-                            children: [
-                              IconButton(
-                                onPressed: () {
-                                  if (macBookRentalStatus[i] == true) {
-                                    _showUnavailableDialog(context, "MacBook", i);
-                                  } else {
-                                    _showModalBottomSheet(context, "MacBook", i);
-                                  }
-                                },
-                                icon: macBookRentalStatus[i] == true
-                                    ? const Icon(Icons.laptop_mac, color: AppColor.Grey1)
-                                    : const Icon(Icons.laptop_mac, color: AppColor.Blue4),
-                                iconSize: 65,
-                                padding: EdgeInsets.zero,
-                              ),
-                              Text(
-                                  "#$i",
-                                  style: macBookRentalStatus[i] == true
-                                      ? const TextStyle(fontSize: 16, color: AppColor.Grey1, fontWeight: FontWeight.bold)
-                                      : const TextStyle(fontSize: 16, color: AppColor.Blue4, fontWeight: FontWeight.bold)
-                              ),
-                            ],
-                          )).toList(),
-                        ),
-                        GridView.count(
-                          crossAxisCount: 4,
-                          children: lgGrams.map((i) => Column(
-                            children: [
-                              IconButton(
-                                onPressed: () {
-                                  if (lgGramRentalStatus[i] == true) {
-                                    _showUnavailableDialog(context, "LG Gram", i);
-                                  } else {
-                                    _showModalBottomSheet(context, "LG Gram", i);
-                                  }
-                                },
-                                icon: lgGramRentalStatus[i] == true
-                                    ? const Icon(Icons.laptop_windows, color: AppColor.Grey1)
-                                    : const Icon(Icons.laptop_windows, color: AppColor.Blue4),
-                                iconSize: 65,
-                                padding: EdgeInsets.zero,
-                              ),
-                              Text(
-                                  "#$i",
-                                  style: lgGramRentalStatus[i] == true
-                                      ? const TextStyle(fontSize: 16, color: AppColor.Grey1, fontWeight: FontWeight.bold)
-                                      : const TextStyle(fontSize: 16, color: AppColor.Blue4, fontWeight: FontWeight.bold)
-                              ),
-                            ],
-                          )).toList(),
-                        ),
-                        GridView.count(
-                          crossAxisCount: 4,
-                          children: webCams.map((i) => Column(
-                            children: [
-                              IconButton(
-                                onPressed: () {
-                                  if (webCamRentalStatus[i] == true) {
-                                    _showUnavailableDialog(context, "WebCam", i);
-                                  } else {
-                                    _showModalBottomSheet(context, "WebCam", i);
-                                  }
-                                },
-                                icon: webCamRentalStatus[i] == true
-                                    ? const Icon(Icons.photo_camera, color: AppColor.Grey1)
-                                    : const Icon(Icons.photo_camera, color: AppColor.Blue4),
-                                iconSize: 65,
-                                padding: EdgeInsets.zero,
-                              ),
-                              Text(
-                                  "#$i",
-                                  style: webCamRentalStatus[i] == true
-                                      ? const TextStyle(fontSize: 16, color: AppColor.Grey1, fontWeight: FontWeight.bold)
-                                      : const TextStyle(fontSize: 16, color: AppColor.Blue4, fontWeight: FontWeight.bold)
-                              ),
-                            ],
-                          )).toList(),
-                        ),
+                        SizedBox(height: 180),
+                        CircularProgressIndicator()
                       ],
-                    ),
-                  )
-              )
+                    );
+                  } else {
+                    return Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: TabBarView(
+                            children: [
+                              GridView.count(
+                                crossAxisCount: 4,
+                                children: macBooks.map((i) => Column(
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {
+                                        if (macBookAvailability[i] == true) {
+                                          _showModalBottomSheet(context, "MacBook", i);
+                                        } else {
+                                          _showUnavailableDialog(context, "MacBook", i);
+                                        }
+                                      },
+                                      icon: macBookAvailability[i] == true
+                                          ? const Icon(Icons.laptop_mac, color: AppColor.Blue4)
+                                          : const Icon(Icons.laptop_mac, color: AppColor.Grey1),
+                                      iconSize: 65,
+                                      padding: EdgeInsets.zero,
+                                    ),
+                                    Text(
+                                        "#$i",
+                                        style: macBookAvailability[i] == true
+                                            ? const TextStyle(fontSize: 16, color: AppColor.Blue4, fontWeight: FontWeight.bold)
+                                            : const TextStyle(fontSize: 16, color: AppColor.Grey1, fontWeight: FontWeight.bold)
+                                    ),
+                                  ],
+                                )).toList(),
+                              ),
+
+                              GridView.count(
+                                crossAxisCount: 4,
+                                children: lgGrams.map((i) => Column(
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {
+                                        if (lgGramAvailability[i] == true) {
+                                          _showModalBottomSheet(context, "LG Gram", i);
+                                        } else {
+                                          _showUnavailableDialog(context, "LG Gram", i);
+                                        }
+                                      },
+                                      icon: lgGramAvailability[i] == true
+                                          ? const Icon(Icons.laptop_windows, color: AppColor.Blue4)
+                                          : const Icon(Icons.laptop_windows, color: AppColor.Grey1),
+                                      iconSize: 65,
+                                      padding: EdgeInsets.zero,
+                                    ),
+                                    Text(
+                                        "#$i",
+                                        style: lgGramAvailability[i] == true
+                                            ? const TextStyle(fontSize: 16, color: AppColor.Blue4, fontWeight: FontWeight.bold)
+                                            : const TextStyle(fontSize: 16, color: AppColor.Grey1, fontWeight: FontWeight.bold)
+                                    ),
+                                  ],
+                                )).toList(),
+                              ),
+
+                              GridView.count(
+                                crossAxisCount: 4,
+                                children: webCams.map((i) => Column(
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {
+                                        if (webCamAvailability[i] == true) {
+                                          _showModalBottomSheet(context, "WebCam", i);
+                                        } else {
+                                          _showUnavailableDialog(context, "WebCam", i);
+                                        }
+                                      },
+                                      icon: webCamAvailability[i] == true
+                                          ? const Icon(Icons.photo_camera, color: AppColor.Blue4)
+                                          : const Icon(Icons.photo_camera, color: AppColor.Grey1),
+                                      iconSize: 65,
+                                      padding: EdgeInsets.zero,
+                                    ),
+                                    Text(
+                                        "#$i",
+                                        style: webCamAvailability[i] == true
+                                            ? const TextStyle(fontSize: 16, color: AppColor.Blue4, fontWeight: FontWeight.bold)
+                                            : const TextStyle(fontSize: 16, color: AppColor.Grey1, fontWeight: FontWeight.bold)
+                                    ),
+                                  ],
+                                )).toList(),
+                              ),
+                            ],
+                          ),
+                        )
+                    );
+                  }
+                },
+              ),
+
             ],
           ),
         )
