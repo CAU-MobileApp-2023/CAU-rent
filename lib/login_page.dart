@@ -159,7 +159,7 @@ class _LogInPageState extends State<LogInPage> {
                       headers: {'content-type': 'application/json'}
                   );
                   if (result.statusCode == 200) {
-                    Map<String, dynamic> responseData = json.decode(result.body);
+                    Map<String, dynamic> responseData = jsonDecode(result.body);
                     _handleLoginSuccess(responseData);
                   } else if (result.statusCode == 404) {
                     _showSnackBar('Email address does not exist', Colors.red);
@@ -221,6 +221,7 @@ class _LogInPageState extends State<LogInPage> {
     context.read<UserProvider>().setUserEmail(responseData['user_data']['email']);
     context.read<UserProvider>().setUserName(responseData['user_data']['name']);
     context.read<UserProvider>().setUserStudentId(responseData['user_data']['student_id']);
+    context.read<UserProvider>().setUserPhoneNumber(responseData['user_data']['phone_number']);
 
     Navigator.push(
       context,
