@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:teamproject/provider/User.dart';
 import 'package:teamproject/style.dart';
-import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
 
 class MyPage extends StatefulWidget {
   const MyPage({Key? key}) : super(key: key);
@@ -9,11 +13,60 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> {
+  List<bool> rentalStatus = [false, false, false];    // MacBook, LG gram, WebCam
 
-  String getDuedate() { // 일단은 오늘 기준으로 한달 뒤를 반납일로 설정함.
-    DateTime due = DateTime.now().add(const Duration(days:30));
-    DateFormat formatter = DateFormat('yyyy-MM-dd');
-    return formatter.format(due);
+  Future<String> getMacBookDuedate(String studentId) async {
+    var result = await http.get(
+        Uri.parse('http://10.0.2.2:8000/rental_records/devices/$studentId/now/')
+    );
+    String dueDate = '-';
+    if (result.statusCode == 200) {
+      List<dynamic> responseData = jsonDecode(result.body);
+      for (var data in responseData) {
+        int deviceId = int.parse(data['device'].toString());
+        if (deviceId <= 27) {
+          dueDate = data['end_date'].toString().substring(0, 10);
+          rentalStatus[0] = true;
+        }
+      }
+    }
+    return dueDate;
+  }
+
+  Future<String> getLgGramDuedate(String studentId) async {
+    var result = await http.get(
+        Uri.parse('http://10.0.2.2:8000/rental_records/devices/$studentId/now/')
+    );
+    String dueDate = '-';
+    if (result.statusCode == 200) {
+      List<dynamic> responseData = jsonDecode(result.body);
+      for (var data in responseData) {
+        int deviceId = int.parse(data['device'].toString());
+        if (27 < deviceId && deviceId <= 53) {
+          dueDate = data['end_date'].toString().substring(0, 10);
+          rentalStatus[1] = true;
+        }
+      }
+    }
+    return dueDate;
+  }
+
+  Future<String> getWebCamDuedate(String studentId) async {
+    var result = await http.get(
+        Uri.parse('http://10.0.2.2:8000/rental_records/devices/$studentId/now/')
+    );
+    String dueDate = '-';
+    if (result.statusCode == 200) {
+      List<dynamic> responseData = jsonDecode(result.body);
+      for (var data in responseData) {
+        int deviceId = int.parse(data['device'].toString());
+        if (deviceId > 53) {
+          dueDate = data['end_date'].toString().substring(0, 10);
+          rentalStatus[2] = true;
+        }
+      }
+    }
+    return dueDate;
   }
 
   @override
@@ -34,64 +87,61 @@ class _MyPageState extends State<MyPage> {
                     border: Border.all(width: 2, color: AppColor.Blue)
                 ),
 
-                child: const Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
 
-                    Padding(padding: EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Row(
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
+                          const Text(
                             'Name',
                             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: AppColor.Blue),
                             textAlign: TextAlign.left,
                           ),
                           Text(
-                            '000',
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                            context.read<UserProvider>().userName,
+                            style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
                             textAlign: TextAlign.right
                           ),
                         ],
                       ),
-                    ),
 
-                    Padding(padding: EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Row(
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
+                          const Text(
                             'Student ID',
                             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: AppColor.Blue),
                             textAlign: TextAlign.left
                           ),
                           Text(
-                            '00000000',
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                            context.read<UserProvider>().userStudentId,
+                            style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
                             textAlign:TextAlign.right
                           ),
                         ],
                       ),
-                    ),
 
-                    Padding(padding: EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Row(
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
+                          const Text(
                               'Phone',
                               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: AppColor.Blue),
                               textAlign:TextAlign.left
                           ),
                           Text(
-                              '010-0000-0000',
-                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                              context.read<UserProvider>().userPhoneNumber,
+                              style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
                               textAlign: TextAlign.right
                           ),
                         ],
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
 
@@ -108,6 +158,7 @@ class _MyPageState extends State<MyPage> {
               const Text('Rental Status', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25)),
               const SizedBox(height: 25),
 
+
               Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children:[
@@ -116,20 +167,36 @@ class _MyPageState extends State<MyPage> {
                       child: Column(
                           children:[
                             const Text('MacBook', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColor.Blue)),
-                            const SizedBox(
-                              height: 8,
-                            ),
+                            const SizedBox(height: 8),
                             Container(
                               height: 2.0,
                               width: 70.0,
                               color: AppColor.Blue,
                             ),
-                            const SizedBox(
-                              height: 14,
-                            ),
-                            const Icon(Icons.laptop_mac, color: AppColor.Blue4, size: 65),
+                            const SizedBox(height: 14),
 
-                            Text(getDuedate(), style: const TextStyle(fontWeight: FontWeight.bold)),
+                            rentalStatus[0]
+                                ? const Icon(Icons.laptop_mac, color: AppColor.Blue4, size: 65)
+                                : const Icon(Icons.close_rounded, color: AppColor.Grey1, size: 65),
+
+
+                            FutureBuilder<String>(
+                              future: getMacBookDuedate(context.read<UserProvider>().userStudentId),
+                              builder: (context, snapshot) {
+
+                                if (snapshot.hasData) {
+                                  return Text(
+                                    snapshot.data.toString(),
+                                    style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
+                                  );
+                                }
+                                // return CircularProgressIndicator();
+                                return const Text('-', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15));
+                              },
+                            ),
+
+
+
                           ]
                       ),
                     ),
@@ -139,20 +206,32 @@ class _MyPageState extends State<MyPage> {
                       child: Column(
                           children:[
                             const Text('LG gram', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColor.Blue)),
-                            const SizedBox(
-                              height: 8,
-                            ),
+                            const SizedBox(height: 8),
                             Container(
                               height: 2.0,
                               width: 70.0,
                               color: AppColor.Blue,
                             ),
-                            const SizedBox(
-                              height: 14,
-                            ),
-                            const Icon(Icons.close_rounded, color: AppColor.Grey1, size: 65),
+                            const SizedBox(height: 14),
 
-                            const Text('-'),
+                            rentalStatus[1]
+                              ? const Icon(Icons.laptop_windows, color: AppColor.Blue4, size: 65)
+                              : const Icon(Icons.close_rounded, color: AppColor.Grey1, size: 65),
+
+
+                            FutureBuilder<String>(
+                              future: getLgGramDuedate(context.read<UserProvider>().userStudentId),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  return Text(
+                                    snapshot.data.toString(),
+                                    style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
+                                  );
+                                }
+                                return const Text('-', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15));
+                              },
+                            ),
+
                           ]
                       ),
                     ),
@@ -163,20 +242,31 @@ class _MyPageState extends State<MyPage> {
                       child: Column(
                           children:[
                             const Text('WebCam', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColor.Blue)),
-                            const SizedBox(
-                              height: 8,
-                            ),
+                            const SizedBox(height: 8),
                             Container(
                               height: 2.0,
                               width: 70.0,
                               color: AppColor.Blue,
                             ),
-                            const SizedBox(
-                              height: 14,
-                            ),
-                            const Icon(Icons.close_rounded, color: AppColor.Grey1, size: 65),
+                            const SizedBox(height: 14),
 
-                            const Text('-'),
+                            rentalStatus[2]
+                                ? const Icon(Icons.photo_camera, color: AppColor.Blue4, size: 65)
+                                : const Icon(Icons.close_rounded, color: AppColor.Grey1, size: 65),
+
+                            FutureBuilder<String>(
+                              future: getWebCamDuedate(context.read<UserProvider>().userStudentId),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  return Text(
+                                    snapshot.data.toString(),
+                                    style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
+                                  );
+                                }
+                                return const Text('-', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15));
+                              },
+                            ),
+
                           ]
                       ),
                     ),
@@ -187,8 +277,7 @@ class _MyPageState extends State<MyPage> {
 
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop();
-                  // Navigator.of(context).popUntil((route) => route.isFirst);
+                  Navigator.of(context).popUntil((route) => route.isFirst);
                 },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color>(AppColor.Blue),
@@ -205,6 +294,7 @@ class _MyPageState extends State<MyPage> {
                   style: TextStyle(fontSize: 14),
                 ),
               ),
+
             ]
         ),
       ),
