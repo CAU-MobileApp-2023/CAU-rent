@@ -40,84 +40,34 @@ class _RoomPageState extends State<RoomPage> {
 
     showDialog(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
+      builder: (context) => CupertinoAlertDialog(
+        title: Text(getTomorrow()),
+        content: SizedBox(
+          height: 200,
+          child: CupertinoPicker(
+            itemExtent: 50.0,
+            onSelectedItemChanged: (int index) {
+              result = _items[index];
+            },
+            children: _items.map((e) => Center(child: Text('${e}:00-${e+2}:00', textAlign: TextAlign.center,))).toList(),
           ),
-          title: Text(getTomorrow()),
-          content: Container(
-            height: 180,
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 100,
-                  child: CupertinoPicker(
-                    itemExtent: 40.0,
-                    onSelectedItemChanged: (int index) {
-                      result = _items[index];
-                    },
-                    children: _items
-                        .map((e) => Text(
-                      '$e:00 - ${e+2}:00',
-                      textAlign: TextAlign.center,
-                    ))
-                        .toList(),
-                  ),
-                ),
-                SizedBox(height: 30,),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop(); // AlertDialog 닫기
-                      },
-                      style: ButtonStyle(
-                        backgroundColor:
-                        MaterialStateProperty.all<Color>(AppColor.Blue),
-                        foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                        fixedSize: MaterialStateProperty.all<Size>(
-                            const Size(100, 40)),
-                        shape: MaterialStateProperty.all<OutlinedBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                        ),
-                      ),
-                      child: const Text(
-                        'Confirm',
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop(); // AlertDialog 닫기
-                      },
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                        foregroundColor: MaterialStateProperty.all<Color>(AppColor.Blue),
-                        side: MaterialStateProperty.all<BorderSide>(const BorderSide(color: AppColor.Blue, width: 2.0)),
-                        fixedSize: MaterialStateProperty.all<Size>(const Size(100, 40)),
-                        shape: MaterialStateProperty.all<OutlinedBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0), // 버튼의 모서리를 둥글게
-                            )
-                        ),
-                      ),
-                      child: const Text(
-                        'Cancel',
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+        ),
+        actions: <Widget>[
+          CupertinoDialogAction(
+            child: Text('Cancel'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
           ),
-        );
-      },
+          CupertinoDialogAction(
+            child: Text('Ok'),
+            onPressed: () {
+              // 여기에 Ok 버튼을 눌렀을 때의 동작을 추가하세요.
+              Navigator.of(context).pop();
+            },
+          )
+        ],
+      ),
     );
   }
 
