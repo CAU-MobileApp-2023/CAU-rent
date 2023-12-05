@@ -1,6 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:teamproject/model/EquipmentRentalData.dart';
+import 'package:teamproject/provider/User.dart';
 import 'package:teamproject/style.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:http/http.dart' as http;
@@ -33,7 +36,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
   Future<void> _setRentalStatus() async {
     for (var i in macBooks) {
       var result = await http.get(
-          Uri.parse('http://10.0.2.2:8000/devices/availability/MacBook Air/$i/')
+          Uri.parse('http://10.0.2.2:8000/devices/availability/MacBook/$i/')
       );
       if (result.statusCode == 200) {
         List<dynamic> responseData = jsonDecode(result.body);
@@ -223,8 +226,8 @@ class _EquipmentPageState extends State<EquipmentPage> {
 
 
   void _showModalBottomSheet(BuildContext context, String equipmentType, int equipmentNum, DateTimeRange? rentalPeriod) {
-    List<String>? startDate = rentalPeriod?.start.toLocal().toString().split(' ')[0].split('-');
-    List<String>? endDate = rentalPeriod?.end.toLocal().toString().split(' ')[0].split('-');
+    String? startDate = rentalPeriod?.start.toLocal().toString().split(' ')[0];
+    String? endDate = rentalPeriod?.end.toLocal().toString().split(' ')[0];
 
 
     showModalBottomSheet(
@@ -271,7 +274,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            '${startDate?.join('.')}. - ${endDate?.join('.')}.',
+                            '${startDate?.split('-').join('.')}. - ${endDate?.split('-').join('.')}.',
                             style: const TextStyle(fontSize: 22, color: AppColor.Blue4, fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -306,18 +309,31 @@ class _EquipmentPageState extends State<EquipmentPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       TextButton(
-                        onPressed: () {
+                        onPressed: () async {
 
                           // 대여 처리 로직
+                          String renter = context.read<UserProvider>().userStudentId;
+                          int? device;
+
+                          var result = await http.get(
+                            Uri.parse('http://10.0.2.2:8000/devices/inform/$equipmentType/$equipmentNum/')
+                          );
+                          if (result.statusCode == 200) {
+                            Map<String, dynamic> responseData = jsonDecode(result.body);
+                            device = int.parse(responseData['id'].toString());
+                          }
+
+                          result = await http.post(
+                            Uri.parse('http://10.0.2.2:8000/rental_records/rent/device/'),
+                            body: jsonEncode(
+                              EquipmentRentalData(renter, device, startDate, endDate).toJson()
+                            ),
+                            headers: {'content-type': 'application/json'}
+                          );
 
 
+                          Navigator.of(context).pop();
 
-
-
-
-
-
-                          Navigator.of(context).pop(); // AlertDialog 닫기
                         },
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(AppColor.Blue),
@@ -379,7 +395,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
             builder: (context, setState) {
               return AlertDialog(
                 title: const Text('Select Date Range'),
-                content: Container(
+                content: SizedBox(
                   width: double.maxFinite,
                   child: SfDateRangePicker(
                     onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
@@ -495,6 +511,5 @@ class _EquipmentPageState extends State<EquipmentPage> {
       },
     );
   }
-
 
 }
