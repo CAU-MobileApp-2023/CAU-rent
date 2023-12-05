@@ -21,6 +21,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
   final lgGrams = List.generate(22, (i) => i + 1);
   final webCams = List.generate(19, (i) => i + 1);
 
+
   @override
   void initState() {
     super.initState();
@@ -114,7 +115,14 @@ class _EquipmentPageState extends State<EquipmentPage> {
                                     IconButton(
                                       onPressed: () {
                                         if (macBookAvailability[i] == true) {
-                                          _showModalBottomSheet(context, "MacBook", i);
+                                          // _showModalBottomSheet(context, "MacBook", i);
+
+
+
+                                          _showDatePickerDialog(context, "MacBook", i);
+
+
+
                                         } else {
                                           _showUnavailableDialog(context, "MacBook", i);
                                         }
@@ -142,7 +150,9 @@ class _EquipmentPageState extends State<EquipmentPage> {
                                     IconButton(
                                       onPressed: () {
                                         if (lgGramAvailability[i] == true) {
-                                          _showModalBottomSheet(context, "LG Gram", i);
+                                          _showDatePickerDialog(context, "LG Gram", i);
+
+
                                         } else {
                                           _showUnavailableDialog(context, "LG Gram", i);
                                         }
@@ -170,7 +180,9 @@ class _EquipmentPageState extends State<EquipmentPage> {
                                     IconButton(
                                       onPressed: () {
                                         if (webCamAvailability[i] == true) {
-                                          _showModalBottomSheet(context, "WebCam", i);
+                                          _showDatePickerDialog(context, "WebCam", i);
+
+
                                         } else {
                                           _showUnavailableDialog(context, "WebCam", i);
                                         }
@@ -204,9 +216,16 @@ class _EquipmentPageState extends State<EquipmentPage> {
     );
   }
 
-  void _showModalBottomSheet(BuildContext context, String equipmentType, int equipmentNum) {
-    DateTimeRange? selectedDateRange;
-    bool isDateSelected = false; // 날짜 선택 상태 추적
+
+
+
+
+
+
+  void _showModalBottomSheet(BuildContext context, String equipmentType, int equipmentNum, DateTimeRange? rentalPeriod) {
+    List<String>? startDate = rentalPeriod?.start.toLocal().toString().split(' ')[0].split('-');
+    List<String>? endDate = rentalPeriod?.end.toLocal().toString().split(' ')[0].split('-');
+
 
     showModalBottomSheet(
       context: context,
@@ -216,7 +235,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
             return Container(
-              height: 480,
+              height: 450,
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(15.0)),
                 color: AppColor.Blue1,
@@ -229,7 +248,48 @@ class _EquipmentPageState extends State<EquipmentPage> {
                     style: const TextStyle(fontSize: 32, color: AppColor.Blue, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 20),
-                  Container(width: 340, height: 180, color: Colors.white),
+
+
+
+                  Container(
+                    width: 340,
+                    height: 150,
+                    color: Colors.white,
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 20),
+
+                        const Text(
+                            'Rental Period',
+                            style: TextStyle(fontSize: 20, color: AppColor.Blue4, fontWeight: FontWeight.bold),
+                        ),
+
+                        const SizedBox(height: 8),
+
+                        // 선택된 날짜 범위 표시
+
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            '${startDate?.join('.')}. - ${endDate?.join('.')}.',
+                            style: const TextStyle(fontSize: 22, color: AppColor.Blue4, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+
+                        const SizedBox(height: 18),
+
+                        const Text(
+                          '대여 기간 미준수 시 이용이 제한될 수 있습니다.',
+                          style: TextStyle(fontSize: 12),
+                        ),
+
+
+                      ],
+                    ),
+                  ),
+
+
+
                   const SizedBox(height: 20),
                   const Text(
                     '대여하시겠습니까?',
@@ -239,85 +299,65 @@ class _EquipmentPageState extends State<EquipmentPage> {
                     'Do you want to rent?',
                     style: TextStyle(fontSize: 22, color: AppColor.Blue4, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(height: 10),
-                  // 날짜 선택 버튼
-                  if (!isDateSelected)
-                    TextButton(
-                      onPressed: () {
-                        _showDatePickerDialog(context, (DateTimeRange? range) {
-                          if (range != null) {
-                            setState(() {
-                              selectedDateRange = range;
-                              isDateSelected = true;
-                            });
-                          }
-                        });
-                      },
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(AppColor.Blue),
-                        foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                        fixedSize: MaterialStateProperty.all<Size>(const Size(140, 50)),
-                        shape: MaterialStateProperty.all<OutlinedBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                            )
-                        ),
-                      ),
-                      child: const Text(
-                        'Select Period',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ),
-                  // 선택된 날짜 범위 표시
-                  if (selectedDateRange != null)
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        'Selected Period: ${selectedDateRange?.start.toLocal().toString().split(' ')[0]} - ${selectedDateRange?.end.toLocal().toString().split(' ')[0]}',
-                        style: const TextStyle(fontSize: 16, color: AppColor.Blue4),
-                      ),
-                    ),
-                  // 'Confirm' 및 'Cancel' 버튼 (날짜가 선택된 경우에만 활성화)
-                  if (isDateSelected)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        TextButton(
-                          onPressed: () {
-                            // 대여 처리 로직
-                            Navigator.of(context).pop();
-                          },
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(AppColor.Blue),
-                            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                            fixedSize: MaterialStateProperty.all<Size>(const Size(120, 40)),
-                            shape: MaterialStateProperty.all<OutlinedBorder>(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15.0),
-                                )
-                            ),
+                  const SizedBox(height: 25),
+
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+
+                          // 대여 처리 로직
+
+
+
+
+
+
+
+
+                          Navigator.of(context).pop(); // AlertDialog 닫기
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(AppColor.Blue),
+                          foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                          fixedSize: MaterialStateProperty.all<Size>(const Size(140, 50)),
+                          shape: MaterialStateProperty.all<OutlinedBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15.0), // 버튼의 모서리를 둥글게
+                              )
                           ),
-                          child: const Text('Confirm', style: TextStyle(fontSize: 20)),
                         ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(AppColor.Blue),
-                            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                            fixedSize: MaterialStateProperty.all<Size>(const Size(120, 40)),
-                            shape: MaterialStateProperty.all<OutlinedBorder>(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15.0),
-                                )
-                            ),
+                        child: const Text(
+                          'Confirm',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(); // AlertDialog 닫기
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                          foregroundColor: MaterialStateProperty.all<Color>(AppColor.Blue),
+                          side: MaterialStateProperty.all<BorderSide>(const BorderSide(color: AppColor.Blue, width: 2.0)),
+                          fixedSize: MaterialStateProperty.all<Size>(const Size(140, 50)),
+                          shape: MaterialStateProperty.all<OutlinedBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15.0), // 버튼의 모서리를 둥글게
+                              )
                           ),
-                          child: const Text('Cancel', style: TextStyle(fontSize: 20)),
                         ),
-                      ],
-                    ),
-                  const SizedBox(height: 20),
+                        child: const Text(
+                          'Cancel',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ),
+                    ],
+                  ),
+
+
                 ],
               ),
             );
@@ -327,7 +367,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
     );
   }
 
-  void _showDatePickerDialog(BuildContext context, Function(DateTimeRange?) onSelect) {
+  void _showDatePickerDialog(BuildContext context, String equipmentType, int equipmentNum) {
     DateTime? selectedStartDate;
     DateTime? selectedEndDate;
     DateTime maxDate = DateTime.now().add(const Duration(days: 90)); // 초기 maxDate 설정
@@ -362,14 +402,35 @@ class _EquipmentPageState extends State<EquipmentPage> {
                   ),
                 ),
                 actions: <Widget>[
-                  TextButton(
-                    child: const Text('OK'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      onSelect(selectedStartDate != null && selectedEndDate != null
-                          ? DateTimeRange(start: selectedStartDate!, end: selectedEndDate!)
-                          : null);
-                    },
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextButton(
+                        child: const Text('Select', style: TextStyle(fontSize: 18)),
+                        onPressed: () {
+
+                          DateTimeRange? selectedDateRange;
+                          if (selectedStartDate != null && selectedEndDate != null) {
+                            Navigator.of(context).pop();
+                            selectedDateRange = DateTimeRange(start: selectedStartDate!, end: selectedEndDate!);
+                            _showModalBottomSheet(context, equipmentType, equipmentNum, selectedDateRange);
+                          }
+
+                        },
+                      ),
+
+                      const SizedBox(width: 20),
+
+
+                      TextButton(
+                        child: const Text('Cancel', style: TextStyle(fontSize: 18)),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+
+
+                    ],
                   ),
                 ],
               );
@@ -378,8 +439,6 @@ class _EquipmentPageState extends State<EquipmentPage> {
       },
     );
   }
-
-
 
 
 
@@ -419,7 +478,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
                       fixedSize: MaterialStateProperty.all<Size>(const Size(140, 50)),
                       shape: MaterialStateProperty.all<OutlinedBorder>(
                           RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0), // 버튼의 모서리를 둥글게
+                            borderRadius: BorderRadius.circular(15.0),
                           )
                       ),
                     ),
@@ -436,4 +495,6 @@ class _EquipmentPageState extends State<EquipmentPage> {
       },
     );
   }
+
+
 }
