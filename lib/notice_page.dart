@@ -144,11 +144,10 @@ class _NoticePageState extends State<NoticePage> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        appBar: AppBar(
-          title: Text('공지사항'),
-        ),
         body: Column(
           children: [
+            const SizedBox(height: 70),
+            const Text("Notice", style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold)),
             const SizedBox(height: 20),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 25),
