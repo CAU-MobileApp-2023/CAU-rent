@@ -1,6 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:teamproject/model/RoomRentalData.dart';
+import 'package:teamproject/provider/User.dart';
 import 'package:teamproject/style.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,7 +21,7 @@ class _RoomPageState extends State<RoomPage> {
   //late Map<int, bool> projectRoomRentalStatus;
   //final projectRooms = List.generate(5, (i) => i + 1);
 
-  final _rooms =['-- 선택해 주세요 --', '팀프로젝트실 1', '팀프로젝트실 2', '팀프로젝트실 3', '팀프로젝트실 4', '팀프로젝트실 5'];
+  final _rooms =['-- 선택해 주세요 --', '팀프로젝트실1', '팀프로젝트실2', '팀프로젝트실3', '팀프로젝트실4', '팀프로젝트실5'];
   String? _selectedRoom;
   String tomorrowDate = DateFormat('yyyy-MM-dd').format(DateTime.now().add(const Duration(days: 1)));
 
@@ -38,7 +41,7 @@ class _RoomPageState extends State<RoomPage> {
 
   Future<void> _getRentalRecords() async {
     var result = await http.get(
-      Uri.parse('http://10.0.2.2:8000/rental_records/classroom/208관/${_selectedRoom!.substring(_selectedRoom!.length - 1)}/')
+      Uri.parse('http://10.0.2.2:8000/rental_records/classroom/208관/$_selectedRoom/')
     );
     if (result.statusCode == 200) {
       rentalRecords = jsonDecode(result.body);
@@ -176,19 +179,20 @@ class _RoomPageState extends State<RoomPage> {
                                 ),
                               ],
                             )
-                            :
-
-
-                          DataTable(
+                            : DataTable(
                               columns: const [
                                 DataColumn(label: Text('날짜')),
                                 DataColumn(label: Text('시간')),
                                 DataColumn(label: Text('예약자')),
                               ],
 
-                              rows: rentalRecords.map((data) {
+                              rows: rentalRecords.where((data) {
+                                return data['start_date'].toString().substring(0, 10) == tomorrowDate;
+                              }).map((data) {
+
                                 return DataRow(cells: [
-                                  DataCell(Text(tomorrowDate)),
+                                  // DataCell(Text(tomorrowDate)),
+                                  DataCell(Text('${data['start_date'].toString().substring(0, 10)}')),
                                   DataCell(
                                       Text('${data['start_date'].toString().substring(11, 16)} - ${data['end_date'].toString().substring(11, 16)}')
                                   ),
@@ -196,11 +200,10 @@ class _RoomPageState extends State<RoomPage> {
                                 ]);
 
                               }).toList(),
-                          ),
+                            ),
 
 
                         ),
-
 
 
 
@@ -239,7 +242,7 @@ class _RoomPageState extends State<RoomPage> {
 
   void _showTimeDialog(BuildContext context, String room) { // 예약 시간 팝업창
     final List<int> _time = List.generate(5, (index) => index * 2 + 9);
-    int result = _time[0];
+    int _selectedTime = _time[0];
 
     showDialog(
       context: context,
@@ -251,7 +254,7 @@ class _RoomPageState extends State<RoomPage> {
           child: CupertinoPicker(
             itemExtent: 50.0,
             onSelectedItemChanged: (int index) {
-              result = _time[index];
+              _selectedTime = _time[index];
             },
             children: _time.map((e) => Center(child: Text('${e}:00-${e+2}:00', textAlign: TextAlign.center,))).toList(),
           ),
@@ -261,10 +264,31 @@ class _RoomPageState extends State<RoomPage> {
 
           CupertinoDialogAction(
             child: Text('Select'),
-            onPressed: () {
+            onPressed: () async {
               // 여기에 Ok 버튼을 눌렀을 때의 동작을 추가하세요.
 
 
+              String renter = context.read<UserProvider>().userStudentId;
+              int? roomId;
+
+              var result = await http.get(
+                  Uri.parse('http://10.0.2.2:8000/classrooms/inform/208관/$room/')
+              );
+              if (result.statusCode == 200) {
+                Map<String, dynamic> responseData = jsonDecode(result.body);
+                roomId = int.parse(responseData['id'].toString());
+              }
+
+              String startDate = '${tomorrowDate}T$_selectedTime:00';
+              String endDate = '${tomorrowDate}T${_selectedTime+2}:00';
+
+              result = await http.post(
+                  Uri.parse('http://10.0.2.2:8000/rental_records/rent/classroom/'),
+                  body: jsonEncode(
+                      RoomRentalData(renter, roomId, startDate, endDate).toJson()
+                  ),
+                  headers: {'content-type': 'application/json'}
+              );
 
 
               Navigator.of(context).pop();
