@@ -10,66 +10,70 @@ class NoticePage extends StatefulWidget {
 
 class _NoticePageState extends State<NoticePage> {
   final List<String> koreanNotices = [
-    "중앙대학교 소프트웨어학부 장비 대여 사업 공지",
-    "■ 장비 대여 대상: 소프트웨어학부, 컴퓨터공학부 재학생 (대학원생도 가능)",
-    "■ 장비 대여 품목",
-    "   a. 웹캠, Logitech C992 Pro",
+    "CAU-rent 장비 대여",
+    "■  장비 대여 대상",
+    "   소프트웨어학부 재학생",
+    "■  장비 대여 품목",
+    "   a. M1맥북에어(2020), A2337",
     "   b. LG그램(2021), 16TD90P-GX7DK",
-    "   c. M1맥북에어(2020), A2337",
-    "■ 장비 대여 장소: 208관 317호",
-    "■ 방문 가능 시간: 오전 11시 ~ 오후 6시 (주말 및 공휴일 제외)",
-    "■ 장비 대여 및 반납 방법",
-    "   (1) cse.cau.ac.kr 접속 -> 열린광장 클릭 -> 장비대여 탭에서 장비 신청",
-    "   ( https://cse.cau.ac.kr/sub05/sub0505_cal.php )",
-    "   (2) 장비 대여 탭에서 장비 신청 후 대여 전 (최소 2시간 전) 오픈 채팅",
-    "   (https://open.kakao.com/o/sXxaAXDd)을 통하여 방문 신청",
-    "   ( 내용 : 이름 / 학번 / 장비 번호 / 방문 시간 / 대여 기간 )",
-    "   (3) 장비 대여 시에 장비 대장 작성 (학생증 지참, 물품 번호, 대여 전 물품 확인 필수)",
-    "   (4) 사용 후 반납 시에도 오픈 채팅 (https://open.kakao.com/o/sXxaAXDd)을 통하여 반납",
-    "   시간 신청",
-    "   ( 반납 신청도 대여 신청과 동일하게 대여 전 오픈 채팅을 통해 시간 신청 )",
-    "   (5) 반납 시에 대여 대장 작성 (반납 시 학생증 지참, 물품 확인 필수)",
-    "■ 기타 문의 사항: https://open.kakao.com/o/sXxaAXDd 을 통해 문의",
-    "■ 주의사항",
-    "   (1) 파손 및 분실 시 배상 책임 부과",
-    "   (2) 오픈 채팅 방 참가 시, 성명/학번으로 프로필 고정 필수",
-    "■ 기타 사항",
-    "   (1) 1회 최대 대여 기간 6개월 가능",
-    "   (2) 기간 종료 후 7일내 반납 필수",
+    "   c. 웹캠, Logitech C992 Pro",
+    "■  장비 대여 및 반납 방법",
+    "  1. 장비 대여 탭에서 장비 신청 후 대여 전 오픈 채팅을 통하여 방문 신청",
+    "   (https://open.kakao.com/o/sXxaAXDd)",
+    "  2. 장비 대여 시 장비 대장 작성 (학생증 지참, 물품 번호 및 물품 상태 확인)",
+    "  3. 사용 후 반납 시에도 오픈 채팅을 통하여 반납",
+    "  4. 반납 시에 대여 대장 작성 (학생증 지참)",
+    "■  장비 대여 장소",
+    "   208관 317호",
+    "■  주의사항",
+    "  • 파손 및 분실 시 배상 책임 부과",
+    "  • 대여기간 내 반납 필수",
+
+
+    "CAU-rent 팀플룸 예약",
+    "■  팀플룸 예약 대상",
+    "   소프트웨어학부 재학생",
+    "■  팀플룸 장소",
+    "   208관 6층",
+    "■  주의사항",
+    "  • 예약된 시간에만 사용 가능",
+    "  • 사용 후 뒷정리 필수",
   ];
 
   final List<String> englishNotices = [
-    "Chung-Ang University Software Department Equipment Rental Announcement",
-    "■ Equipment Rental Eligibility: Students of the Software Department and Computer Engineering Department (Graduate students also eligible)",
-    "■ Equipment for Rental",
-    "   a. Webcam, Logitech C992 Pro",
+    "CAU-rent Equipment Rental",
+    "■  Target",
+    "   Students of Software Department",
+    "■  Equipment",
+    "   a. M1 MacBook Air (2020), A2337",
     "   b. LG Gram (2021), 16TD90P-GX7DK",
-    "   c. M1 MacBook Air (2020), A2337",
-    "■ Equipment Rental Location: Building 208, Room 317",
-    "■ Visiting Hours: 11 AM - 6 PM (Excluding weekends and public holidays)",
-    "■ Equipment Rental and Return Process",
-    "   (1) Visit cse.cau.ac.kr -> Click on Open Plaza -> Apply for equipment in the Equipment Rental tab",
-    "   ( https://cse.cau.ac.kr/sub05/sub0505_cal.php )",
-    "   (2) After applying for equipment in the Equipment Rental tab, apply for a visit at least 2 hours before rental through Open Chat",
+    "   c. Webcam, Logitech C992 Pro",
+    "■  How to Rent and Return",
+    "  1. After applying for equipment in the Equipment Rental tab, apply for a visit through Open Chat",
     "   (https://open.kakao.com/o/sXxaAXDd)",
-    "   ( Details: Name / Student ID / Equipment Number / Visit Time / Rental Period )",
-    "   (3) Fill out the equipment log when renting (Student ID required, check equipment number and condition before renting)",
-    "   (4) Apply for return time through Open Chat (https://open.kakao.com/o/sXxaAXDd) after use",
-    "   ( Return application process is the same as the rental application, apply for time via Open Chat )",
-    "   (5) Fill out the rental log upon return (Student ID required, check equipment upon return)",
-    "■ Other Inquiries: Via https://open.kakao.com/o/sXxaAXDd",
-    "■ Cautions",
-    "   (1) Compensation required for damage or loss",
-    "   (2) Mandatory to fix profile to Name/Student ID when joining the Open Chat room",
-    "■ Additional Information",
-    "   (1) Maximum rental period per instance is 6 months",
-    "   (2) Return mandatory within 7 days after the end of the rental period",
+    "  2. Fill out the equipment log when renting (Student ID required, check equipment number and condition before renting)",
+    "  3. Apply for return through Open Chat after use",
+    "  4. Fill out the rental log upon return (Student ID required)",
+    "■  Location",
+    "   Building 208, Room 317",
+    "■  Cautions",
+    "  • Compensation required for damage or loss",
+    "  • Return must be made within the rental period",
+
+    "CAU-rent Room Reservation",
+    "■  Target",
+    "   Students of Software Department",
+    "■  Location",
+    "   Building 208, 6th floor",
+    "■  Cautions",
+    "  • Available only at reserved time",
+    "  • Make sure to clean up after using",
   ];
 
   // 스타일 정의
-  final TextStyle subTitleStyle = TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black);
-  final TextStyle detailTextStyle = TextStyle(fontSize: 14, color: Colors.grey[600]);
-  final TextStyle headlineStyle = TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColor.Blue);
+  final TextStyle subTitleStyle = const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black);
+  final TextStyle detailTextStyle = TextStyle(fontSize: 14.5, color: Colors.grey[700]);
+  final TextStyle headlineStyle = const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColor.Blue);
 
   // 소제목과 세부 내용을 묶어서 컨테이너를 만드는 함수
   Widget buildNoticeGroup(List<String> notices) {
@@ -77,7 +81,8 @@ class _NoticePageState extends State<NoticePage> {
     bool isHeadlineGroup = false;
 
     for (var notice in notices) {
-      bool isHeadline = notice.contains("중앙대학교 소프트웨어학부 장비 대여 사업 공지") || notice.contains("Chung-Ang University Software Department Equipment Rental Announcement");
+      bool isHeadline = notice.contains("CAU-rent 장비 대여") || notice.contains("CAU-rent Equipment Rental")
+          || notice.contains("CAU-rent 팀플룸 예약") || notice.contains("CAU-rent Room Reservation");
       if (isHeadline) {
         isHeadlineGroup = true;
       }
@@ -85,23 +90,21 @@ class _NoticePageState extends State<NoticePage> {
 
       groupWidgets.add(
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 8),
-            child: Text(
-              notice,
-              style: isHeadline ? headlineStyle : isSubTitle ? subTitleStyle : detailTextStyle,
-              textAlign: isHeadline ? TextAlign.center : TextAlign.left,
-            ),
+            padding: const EdgeInsets.symmetric(vertical: 6),
+            child: isHeadline
+              ? Center(child: Text(notice, style: headlineStyle,))
+              : Text(notice, style: isSubTitle ? subTitleStyle : detailTextStyle),
           )
       );
     }
 
     return Container(
-      margin: EdgeInsets.all(8),
-      padding: EdgeInsets.all(12),
+      margin: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
-        boxShadow: isHeadlineGroup ? [] : [
+        boxShadow: !isHeadlineGroup ? [] : [
           BoxShadow(
             color: Colors.grey.withOpacity(0.2),
             spreadRadius: 2,
@@ -123,7 +126,9 @@ class _NoticePageState extends State<NoticePage> {
     List<String> currentGroup = [];
 
     for (var notice in notices) {
-      if (notice.startsWith('■')) {
+      bool isHeadline = notice.contains("CAU-rent 장비 대여") || notice.contains("CAU-rent Equipment Rental")
+          || notice.contains("CAU-rent 팀플룸 예약") || notice.contains("CAU-rent Room Reservation");
+      if (notice.startsWith('■') || isHeadline) {
         if (currentGroup.isNotEmpty) {
           groupedWidgets.add(buildNoticeGroup(currentGroup));
           currentGroup = [];
@@ -170,12 +175,12 @@ class _NoticePageState extends State<NoticePage> {
                 children: [
                   // 한국어 탭의 내용
                   ListView(
-                    padding: EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
                     children: groupNotices(koreanNotices),
                   ),
                   // English 탭의 내용
                   ListView(
-                    padding: EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
                     children: groupNotices(englishNotices),
                   ),
                 ],
