@@ -308,7 +308,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      TextButton(
+                      ElevatedButton(
                         onPressed: () async {
 
                           // 대여 처리 로직
@@ -350,7 +350,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
                           style: TextStyle(fontSize: 20),
                         ),
                       ),
-                      TextButton(
+                      ElevatedButton(
                         onPressed: () {
                           Navigator.of(context).pop(); // AlertDialog 닫기
                         },
@@ -484,7 +484,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  TextButton(
+                  ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).pop(); // AlertDialog 닫기
                     },
