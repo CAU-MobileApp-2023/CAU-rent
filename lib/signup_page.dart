@@ -47,6 +47,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   height: 45,
                   child: TextFormField(
                     key: const ValueKey(1),
+                    keyboardType: TextInputType.emailAddress,
 
                     controller: emailController,
 
@@ -176,6 +177,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   height: 45,
                   child: TextFormField(
                     key: const ValueKey(4),
+                    keyboardType: TextInputType.number,
 
                     controller: studentIdController,
                     decoration: InputDecoration(
@@ -209,6 +211,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   height: 45,
                   child: TextFormField(
                     key: const ValueKey(5),
+                    keyboardType: TextInputType.number,
 
                     controller: phoneController,
                     decoration: InputDecoration(
