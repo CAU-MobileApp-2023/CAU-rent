@@ -139,12 +139,6 @@ class _RoomPageState extends State<RoomPage> {
                               child: Column(
                                 children: [
                                   Table(
-                                    // border: TableBorder.all(), // 필요에 따라 테두리 설정
-                                    // columnWidths: const {
-                                    //   0: FixedColumnWidth(100), // 첫 번째 열의 폭 설정
-                                    //   1: FixedColumnWidth(100), // 두 번째 열의 폭 설정
-                                    //   2: FixedColumnWidth(100), // 세 번째 열의 폭 설정
-                                    // },
                                     children: const [
                                       TableRow(
                                         children: [
@@ -199,20 +193,23 @@ class _RoomPageState extends State<RoomPage> {
                                 DataColumn(label: Text('예약자')),
                               ],
 
+
                               rows: rentalRecords.where((data) {
                                 return data['start_date'].toString().substring(0, 10) == tomorrowDate;
                               }).map((data) {
 
                                 return DataRow(cells: [
-                                  // DataCell(Text(tomorrowDate)),
                                   DataCell(Text(data['start_date'].toString().substring(0, 10))),
                                   DataCell(
-                                      Text('${data['start_date'].toString().substring(11, 16)} - ${data['end_date'].toString().substring(11, 16)}')
+                                      Text('${data['start_date'].toString().substring(11, 16)}-${data['end_date'].toString().substring(11, 16)}')
                                   ),
                                   DataCell(Text(data['renter'])),
                                 ]);
 
                               }).toList(),
+
+
+
                             ),
 
 
@@ -225,7 +222,16 @@ class _RoomPageState extends State<RoomPage> {
 
                         ElevatedButton(
                           onPressed: () {
+
+
+
+
                             _showTimeDialog(context, _selectedRoom!);
+                            // _showReservedDialog(context);
+
+
+
+
                           },
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(AppColor.Blue),
@@ -259,6 +265,10 @@ class _RoomPageState extends State<RoomPage> {
 
 
 
+
+
+
+
   void _showTimeDialog(BuildContext context, String room) { // 예약 시간 팝업창
     final List<int> _time = List.generate(5, (index) => index * 2 + 9);
     int _selectedTime = _time[0];
@@ -266,10 +276,10 @@ class _RoomPageState extends State<RoomPage> {
     showDialog(
       context: context,
       builder: (context) => CupertinoAlertDialog(
-        title: Text(room, style: const TextStyle(fontSize: 18)),
+        title: Text(room, style: const TextStyle(fontSize: 20)),
 
         content: SizedBox(
-          height: 200,
+          height: 220,
           child: CupertinoPicker(
             itemExtent: 50.0,
             onSelectedItemChanged: (int index) {
@@ -282,48 +292,164 @@ class _RoomPageState extends State<RoomPage> {
         actions: <Widget>[
 
           CupertinoDialogAction(
-            child: const Text('Select'),
+            child: const Text(
+              'Select',
+              style: TextStyle(color: AppColor.Blue, fontWeight: FontWeight.w500),
+            ),
             onPressed: () async {
               // 여기에 Ok 버튼을 눌렀을 때의 동작을 추가하세요.
 
 
               String renter = context.read<UserProvider>().userStudentId;
               int? roomId;
-
-              var result = await http.get(
-                  Uri.parse('http://10.0.2.2:8000/classrooms/inform/208관/$room/')
-              );
-              if (result.statusCode == 200) {
-                Map<String, dynamic> responseData = jsonDecode(result.body);
-                roomId = int.parse(responseData['id'].toString());
-              }
-
               String startDate = '${tomorrowDate}T$_selectedTime:00';
               String endDate = '${tomorrowDate}T${_selectedTime+2}:00';
 
-              result = await http.post(
-                  Uri.parse('http://10.0.2.2:8000/rental_records/rent/classroom/'),
-                  body: jsonEncode(
-                      RoomRentalData(renter, roomId, startDate, endDate).toJson()
-                  ),
-                  headers: {'content-type': 'application/json'}
+
+
+              bool isReservedTime = true;
+
+              var result = await http.get(
+                  Uri.parse('http://10.0.2.2:8000/classrooms/availability/208관/$room/$tomorrowDate/')
               );
+              if (result.statusCode == 200) {
+                List<dynamic> responseData = jsonDecode(result.body);
+                isReservedTime = responseData[_selectedTime - 9]['is_available'];
+
+              }
+
+              Navigator.of(context).pop();
+
+              if (!isReservedTime) {
+                // _showReservationFailDialog(context);
+                _showReservationSuccessDialog(context, tomorrowDate, _selectedTime);
+              }
+
+              else {
+                result = await http.get(Uri.parse(
+                    'http://10.0.2.2:8000/classrooms/inform/208관/$room/'));
+                if (result.statusCode == 200) {
+                  Map<String, dynamic> responseData = jsonDecode(result.body);
+                  roomId = int.parse(responseData['id'].toString());
+                }
+
+                result = await http.post(
+                    Uri.parse(
+                        'http://10.0.2.2:8000/rental_records/rent/classroom/'),
+                    body: jsonEncode(
+                        RoomRentalData(renter, roomId, startDate, endDate)
+                            .toJson()),
+                    headers: {'content-type': 'application/json'});
 
 
+                _showReservationSuccessDialog(context, tomorrowDate, _selectedTime);
+              }
+            },
+          ),
+
+
+
+
+          CupertinoDialogAction(
+            child: const Text(
+              'Cancel',
+              style: TextStyle(color: AppColor.Blue, fontWeight: FontWeight.w500),
+            ),
+            onPressed: () {
               Navigator.of(context).pop();
             },
           ),
 
+
+        ],
+      ),
+    );
+  }
+
+
+  void _showReservationSuccessDialog(BuildContext context, String date, int time) {
+
+    showDialog(
+      context: context,
+      builder: (context) => CupertinoAlertDialog(
+        title: const Text('Successfully Reserved', style: TextStyle(fontSize: 22)),
+
+        content: SizedBox(
+          height: 80,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(height: 18),
+              Text('Date: $date', style: TextStyle(fontSize: 16)),
+              const SizedBox(height: 5),
+              Text('Time: $time:00 - ${time+2}:00', style: TextStyle(fontSize: 16)),
+            ],
+          ),
+        ),
+
+        actions: <Widget>[
           CupertinoDialogAction(
-            child: const Text('Cancel'),
+            child: const Text(
+              'Confirm',
+              style: TextStyle(color: AppColor.Blue, fontWeight: FontWeight.w500),
+            ),
             onPressed: () {
               Navigator.of(context).pop();
             },
           ),
 
         ],
+
+
       ),
     );
+
+  }
+
+
+
+  void _showReservationFailDialog(BuildContext context) {
+
+    showDialog(
+        context: context,
+        builder: (context) => CupertinoAlertDialog(
+          title: const Text('Failed to Reserve', style: TextStyle(fontSize: 24)),
+
+
+          content: const SizedBox(
+            height: 60,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('현재 사용 중인 팀플룸입니다.', style: TextStyle(fontSize: 14)),
+                Text(
+                  'This room is not available to reserve now.',
+                  style: TextStyle(fontSize: 12),
+                ),
+              ],
+            ),
+          ),
+
+
+
+          actions: <Widget>[
+            CupertinoDialogAction(
+              child: const Text(
+                'Confirm',
+                style: TextStyle(color: AppColor.Blue, fontWeight: FontWeight.w500),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+
+
+          ],
+
+
+        ),
+    );
+
   }
 
 
