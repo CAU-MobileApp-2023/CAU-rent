@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:teamproject/style.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart' as http;
 
 
 class RoomPage extends StatefulWidget {
@@ -15,61 +18,44 @@ class _RoomPageState extends State<RoomPage> {
   //late Map<int, bool> projectRoomRentalStatus;
   //final projectRooms = List.generate(5, (i) => i + 1);
 
-  final _rooms =['--선택해 주세요--','팀프로젝트실1 (208관 601호)','팀프로젝트실2 (208관 601호)','팀프로젝트실3 (208관 601호)','팀프로젝트실4 (208관 601호)','팀프로젝트실5 (208관 601호)'];
+  final _rooms =['-- 선택해 주세요 --', '팀프로젝트실 1', '팀프로젝트실 2', '팀프로젝트실 3', '팀프로젝트실 4', '팀프로젝트실 5'];
   String? _selectedRoom;
+  String tomorrowDate = DateFormat('yyyy-MM-dd').format(DateTime.now().add(const Duration(days: 1)));
 
   @override
   void initState() {
     super.initState();
     setState(() {
-      _selectedRoom=_rooms[0];
+      _selectedRoom = _rooms[0];
     });
     // 각 팀플룸 대여 상태 저장
     // projectRoomRentalStatus = { for (var item in projectRooms) item : item % 2 == 0 };
   }
 
-  String getTomorrow(){ // 예약 날짜(내일) 받아오는 함수
-    DateTime tomorrow = DateTime.now().add(Duration(days:1));
-    DateFormat formatter = DateFormat('yyyy-MM-dd');
-    return formatter.format(tomorrow);
-  }
 
-  void _showTimeDialog(BuildContext context) { // 예약 시간 팝업창
-    final List<int> _items = List.generate(5, (index) => index*2 + 9);
-    int result = _items[0];
 
-    showDialog(
-      context: context,
-      builder: (context) => CupertinoAlertDialog(
-        title: Text(getTomorrow()),
-        content: SizedBox(
-          height: 200,
-          child: CupertinoPicker(
-            itemExtent: 50.0,
-            onSelectedItemChanged: (int index) {
-              result = _items[index];
-            },
-            children: _items.map((e) => Center(child: Text('${e}:00-${e+2}:00', textAlign: TextAlign.center,))).toList(),
-          ),
-        ),
-        actions: <Widget>[
-          CupertinoDialogAction(
-            child: Text('Cancel'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          CupertinoDialogAction(
-            child: Text('Ok'),
-            onPressed: () {
-              // 여기에 Ok 버튼을 눌렀을 때의 동작을 추가하세요.
-              Navigator.of(context).pop();
-            },
-          )
-        ],
-      ),
+  late List<dynamic> rentalRecords;
+
+  Future<void> _getRentalRecords() async {
+    var result = await http.get(
+      Uri.parse('http://10.0.2.2:8000/rental_records/classroom/208관/${_selectedRoom!.substring(_selectedRoom!.length - 1)}/')
     );
+    if (result.statusCode == 200) {
+      rentalRecords = jsonDecode(result.body);
+
+      for (var data in rentalRecords) {
+        var result = await http.get(
+            Uri.parse('http://10.0.2.2:8000/users/inform/${data['renter']}/')
+        );
+        if (result.statusCode == 200) {
+          var responseData = jsonDecode(result.body);
+          data['renter'] = responseData['name'];
+        }
+
+      }
+    }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -92,12 +78,13 @@ class _RoomPageState extends State<RoomPage> {
                     Tab(text: 'Team Project Room (208관 601호)'),
                   ]
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 20),
+
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.forum_rounded, color: AppColor.Blue4, size: 40),
+                  const Icon(Icons.people, color: AppColor.Blue4, size: 35),
                   const SizedBox( width: 20),
                   DropdownButton(
                     value: _selectedRoom,
@@ -112,62 +99,199 @@ class _RoomPageState extends State<RoomPage> {
                 ],
               ),
 
-             SizedBox(height: 30,),
+              const SizedBox(height: 10),
 
-             SingleChildScrollView(
-                scrollDirection:Axis.horizontal,
-                child: SingleChildScrollView(
-                 child: Container(
-                     margin: EdgeInsets.all(16.0),
-                     decoration: BoxDecoration(
-                       border: Border.all(
-                         width: 1,
-                         color: AppColor.Grey1,
-                       ),
-                     ),
 
-                     child: DataTable(columns: const [
-                       DataColumn(label: Text('날짜')),
-                       DataColumn(label: Text('시간'), numeric: true),
-                       DataColumn(label: Text('예약자명')),
-                       //DataColumn(label: Text('인원수')),
-                       //DataColumn(label: Text('이용목적')),
-                     ], rows:  [                   // 예약 현황 표 예시
-                       DataRow(cells: [
-                         DataCell(Text(getTomorrow())),
-                         DataCell(Text('09:00-11:00')),
-                         DataCell(Text('김푸앙')),
-                         //DataCell(Text('5')),
-                         //DataCell(Text('팀플')),
-                       ]),
-                       DataRow(cells: [
-                         DataCell(Text(getTomorrow())),
-                         DataCell(Text('13:00-15:00')),
-                         DataCell(Text('이푸앙')),
-                         //DataCell(Text('3')),
-                         //DataCell(Text('캡스톤')),
-                       ]),
-                     ]),
-                 ),
-               ),
-             ),
 
-             const SizedBox(height: 20,),
+              _selectedRoom == _rooms[0]
+              ? Text('선택하시오')
+              : FutureBuilder<void>(
+                future: _getRentalRecords(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState != ConnectionState.done) {
+                    return const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(height: 180),
+                        CircularProgressIndicator()
+                      ],
+                    );
+                  } else {
+                    return Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              width: 1,
+                              color: AppColor.Grey1,
+                            ),
+                          ),
 
-             ElevatedButton(onPressed: () {_showTimeDialog(context);},
-                 style: ElevatedButton.styleFrom(
-                 backgroundColor: AppColor.Blue,
-                 shape: RoundedRectangleBorder(
-                   borderRadius: BorderRadius.circular(15.0),
-                 )
-             ),
-                 child: const Text('Reserve',style: TextStyle(fontSize:20),),
-             ),
+
+
+                          child:
+                            rentalRecords.isEmpty
+                            ? Column(
+                              children: [
+                                Table(
+                                  // border: TableBorder.all(), // 필요에 따라 테두리 설정
+                                  // columnWidths: const {
+                                  //   0: FixedColumnWidth(100), // 첫 번째 열의 폭 설정
+                                  //   1: FixedColumnWidth(100), // 두 번째 열의 폭 설정
+                                  //   2: FixedColumnWidth(100), // 세 번째 열의 폭 설정
+                                  // },
+                                  children: const [
+                                    TableRow(
+                                      children: [
+                                        TableCell(
+                                          child: Center(child: Text('날짜')),
+                                        ),
+                                        TableCell(
+                                          child: Center(child: Text('시간')),
+                                        ),
+                                        TableCell(
+                                          child: Center(child: Text('예약자명')),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+
+                                Table(
+                                  // border: TableBorder.all(), // 필요에 따라 테두리 설정
+                                  // columnWidths: const {
+                                  //   0: FixedColumnWidth(100), // 첫 번째 열의 폭 설정
+                                  //   1: FixedColumnWidth(100), // 두 번째 열의 폭 설정
+                                  //   2: FixedColumnWidth(100), // 세 번째 열의 폭 설정
+                                  // },
+                                  children: const [
+                                    TableRow(
+                                      children: [
+                                        TableCell(
+                                          child: Center(child: Text('예약 정보가 없습니다.')),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            )
+                            :
+
+
+                          DataTable(
+                              columns: const [
+                                DataColumn(label: Text('날짜')),
+                                DataColumn(label: Text('시간')),
+                                DataColumn(label: Text('예약자')),
+                              ],
+
+                              rows: rentalRecords.map((data) {
+                                return DataRow(cells: [
+                                  DataCell(Text(tomorrowDate)),
+                                  DataCell(
+                                      Text('${data['start_date'].toString().substring(11, 16)} - ${data['end_date'].toString().substring(11, 16)}')
+                                  ),
+                                  DataCell(Text(data['renter'])),
+                                ]);
+
+                              }).toList(),
+                          ),
+
+
+                        ),
+
+
+
+
+                        const SizedBox(height: 15),
+
+
+                        ElevatedButton(
+                          onPressed: () {
+                            _showTimeDialog(context, _selectedRoom!);
+                          },
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColor.Blue,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15.0),
+                              )
+                          ),
+
+                          child: const Text('Reserve', style: TextStyle(fontSize: 20)),
+                        ),
+
+
+                      ],
+                    );
+                  }
+                },
+              ),
+
+
             ],
           ),
         )
     );
   }
+
+
+
+  void _showTimeDialog(BuildContext context, String room) { // 예약 시간 팝업창
+    final List<int> _time = List.generate(5, (index) => index * 2 + 9);
+    int result = _time[0];
+
+    showDialog(
+      context: context,
+      builder: (context) => CupertinoAlertDialog(
+        title: Text(room, style: const TextStyle(fontSize: 18)),
+
+        content: SizedBox(
+          height: 200,
+          child: CupertinoPicker(
+            itemExtent: 50.0,
+            onSelectedItemChanged: (int index) {
+              result = _time[index];
+            },
+            children: _time.map((e) => Center(child: Text('${e}:00-${e+2}:00', textAlign: TextAlign.center,))).toList(),
+          ),
+        ),
+
+        actions: <Widget>[
+
+          CupertinoDialogAction(
+            child: Text('Select'),
+            onPressed: () {
+              // 여기에 Ok 버튼을 눌렀을 때의 동작을 추가하세요.
+
+
+
+
+              Navigator.of(context).pop();
+            },
+          ),
+
+          CupertinoDialogAction(
+            child: Text('Cancel'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+
+        ],
+      ),
+    );
+  }
+
+
+
+
+
+
+
+
+
+
 
   /* 이 아래는 예약 가능 여부 팝업창인데 나중에 백엔드랑 연동 후에 필요할 것 같아서 그대로 둘게요!*/
 
@@ -284,5 +408,19 @@ class _RoomPageState extends State<RoomPage> {
       },
     );
   }
+
+
+  void _showSnackBar(String message, Color color) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: const Duration(seconds: 2),
+        content: Text(message),
+        backgroundColor: color,
+      ),
+    );
+  }
+
+
+
 }
 
