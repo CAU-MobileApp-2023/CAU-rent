@@ -258,7 +258,7 @@ class _MyPageState extends State<MyPage> {
 
               const SizedBox(height: 25),
 
-              TextButton(
+              ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).popUntil((route) => route.isFirst);
                 },

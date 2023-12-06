@@ -107,7 +107,7 @@ class _RoomPageState extends State<RoomPage> {
 
 
               _selectedRoom == _rooms[0]
-              ? Text('선택하시오')
+              ? const Text('선택하시오')
               : FutureBuilder<void>(
                 future: _getRentalRecords(),
                 builder: (context, snapshot) {
@@ -134,50 +134,63 @@ class _RoomPageState extends State<RoomPage> {
 
                           child:
                             rentalRecords.isEmpty
-                            ? Column(
-                              children: [
-                                Table(
-                                  // border: TableBorder.all(), // 필요에 따라 테두리 설정
-                                  // columnWidths: const {
-                                  //   0: FixedColumnWidth(100), // 첫 번째 열의 폭 설정
-                                  //   1: FixedColumnWidth(100), // 두 번째 열의 폭 설정
-                                  //   2: FixedColumnWidth(100), // 세 번째 열의 폭 설정
-                                  // },
-                                  children: const [
-                                    TableRow(
-                                      children: [
-                                        TableCell(
-                                          child: Center(child: Text('날짜')),
-                                        ),
-                                        TableCell(
-                                          child: Center(child: Text('시간')),
-                                        ),
-                                        TableCell(
-                                          child: Center(child: Text('예약자명')),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
+                            ? SizedBox(
+                              width: 350,
+                              child: Column(
+                                children: [
+                                  Table(
+                                    // border: TableBorder.all(), // 필요에 따라 테두리 설정
+                                    // columnWidths: const {
+                                    //   0: FixedColumnWidth(100), // 첫 번째 열의 폭 설정
+                                    //   1: FixedColumnWidth(100), // 두 번째 열의 폭 설정
+                                    //   2: FixedColumnWidth(100), // 세 번째 열의 폭 설정
+                                    // },
+                                    children: const [
+                                      TableRow(
+                                        children: [
+                                          TableCell(
+                                            child: SizedBox(
+                                              height: 50,
+                                              child: Center(child: Text('날짜'))
+                                            ),
+                                          ),
+                                          TableCell(
+                                            child: SizedBox(
+                                              height: 50,
+                                              child: Center(child: Text('시간'))
+                                            ),
+                                          ),
+                                          TableCell(
+                                            child: SizedBox(
+                                              height: 50,
+                                              child: Center(child: Text('예약자명'))
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
 
-                                Table(
-                                  // border: TableBorder.all(), // 필요에 따라 테두리 설정
-                                  // columnWidths: const {
-                                  //   0: FixedColumnWidth(100), // 첫 번째 열의 폭 설정
-                                  //   1: FixedColumnWidth(100), // 두 번째 열의 폭 설정
-                                  //   2: FixedColumnWidth(100), // 세 번째 열의 폭 설정
-                                  // },
-                                  children: const [
-                                    TableRow(
-                                      children: [
-                                        TableCell(
-                                          child: Center(child: Text('예약 정보가 없습니다.')),
-                                        ),
-                                      ],
+                                  Table(
+                                    border: const TableBorder(
+                                      top: BorderSide(width: 1, color: AppColor.Grey1),
                                     ),
-                                  ],
-                                ),
-                              ],
+                                    // border: TableBorder.all(width: 1, color: AppColor.Grey1,),
+                                    children: const [
+                                      TableRow(
+                                        children: [
+                                          TableCell(
+                                            child: SizedBox(
+                                              height: 50,
+                                              child: Center(child: Text('예약 정보가 없습니다.'))
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             )
                             : DataTable(
                               columns: const [
@@ -192,7 +205,7 @@ class _RoomPageState extends State<RoomPage> {
 
                                 return DataRow(cells: [
                                   // DataCell(Text(tomorrowDate)),
-                                  DataCell(Text('${data['start_date'].toString().substring(0, 10)}')),
+                                  DataCell(Text(data['start_date'].toString().substring(0, 10))),
                                   DataCell(
                                       Text('${data['start_date'].toString().substring(11, 16)} - ${data['end_date'].toString().substring(11, 16)}')
                                   ),
@@ -214,14 +227,20 @@ class _RoomPageState extends State<RoomPage> {
                           onPressed: () {
                             _showTimeDialog(context, _selectedRoom!);
                           },
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColor.Blue,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15.0),
-                              )
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(AppColor.Blue),
+                            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                            fixedSize: MaterialStateProperty.all<Size>(const Size(90, 30)),
+                            shape: MaterialStateProperty.all<OutlinedBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                )
+                            ),
                           ),
 
-                          child: const Text('Reserve', style: TextStyle(fontSize: 20)),
+                          child: const Text(
+                              'Reserve',
+                              style: TextStyle(fontSize: 14)),
                         ),
 
 
@@ -263,7 +282,7 @@ class _RoomPageState extends State<RoomPage> {
         actions: <Widget>[
 
           CupertinoDialogAction(
-            child: Text('Select'),
+            child: const Text('Select'),
             onPressed: () async {
               // 여기에 Ok 버튼을 눌렀을 때의 동작을 추가하세요.
 
@@ -296,7 +315,7 @@ class _RoomPageState extends State<RoomPage> {
           ),
 
           CupertinoDialogAction(
-            child: Text('Cancel'),
+            child: const Text('Cancel'),
             onPressed: () {
               Navigator.of(context).pop();
             },
