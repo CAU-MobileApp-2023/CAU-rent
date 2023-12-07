@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:teamproject/notice_page.dart';
-import 'package:teamproject/login_page.dart';
+import 'package:teamproject/screen/notice_page.dart';
+import 'package:teamproject/screen/login_page.dart';
 import 'package:teamproject/provider/User.dart';
-import 'package:teamproject/room_page.dart';
+import 'package:teamproject/screen/room_page.dart';
 import 'package:teamproject/style.dart';
-import 'package:teamproject/equipment_page.dart';
-import 'package:teamproject/mypage.dart';
+import 'package:teamproject/screen/equipment_page.dart';
+import 'package:teamproject/screen/mypage.dart';
 
 void main() => runApp(const MyApp());
 

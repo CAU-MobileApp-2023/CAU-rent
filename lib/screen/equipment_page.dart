@@ -342,7 +342,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
                           fixedSize: MaterialStateProperty.all<Size>(const Size(140, 50)),
                           shape: MaterialStateProperty.all<OutlinedBorder>(
                               RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15.0), // 버튼의 모서리를 둥글게
+                                borderRadius: BorderRadius.circular(15.0),
                               )
                           ),
                         ),
@@ -353,7 +353,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
                       ),
                       ElevatedButton(
                         onPressed: () {
-                          Navigator.of(context).pop(); // AlertDialog 닫기
+                          Navigator.of(context).pop();
                         },
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
@@ -362,7 +362,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
                           fixedSize: MaterialStateProperty.all<Size>(const Size(140, 50)),
                           shape: MaterialStateProperty.all<OutlinedBorder>(
                               RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15.0), // 버튼의 모서리를 둥글게
+                                borderRadius: BorderRadius.circular(15.0),
                               )
                           ),
                         ),

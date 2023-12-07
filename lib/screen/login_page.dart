@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:teamproject/main.dart';
 import 'package:teamproject/model/UserLoginData.dart';
 import 'package:teamproject/provider/User.dart';
-import 'package:teamproject/signup_page.dart';
+import 'package:teamproject/screen/signup_page.dart';
 import 'package:teamproject/style.dart';
 import 'package:http/http.dart' as http;
 

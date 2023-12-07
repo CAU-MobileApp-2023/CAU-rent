@@ -245,12 +245,10 @@ class _RoomPageState extends State<RoomPage> {
                               ],
 
 
-                              rows: rentalRecords.where((data) {
-                                return data['start_date'].toString().substring(0, 10) == tomorrowDate;
-                              }).map((data) {
+                              rows: rentalRecords.map((data) {
 
                                 return DataRow(cells: [
-                                  DataCell(Text(data['start_date'].toString().substring(0, 10))),
+                                  DataCell(Text(tomorrowDate)),
                                   DataCell(
                                       Text('${data['start_date'].toString().substring(11, 16)}-${data['end_date'].toString().substring(11, 16)}')
                                   ),
@@ -335,20 +333,20 @@ class _RoomPageState extends State<RoomPage> {
               String endDate = '${tomorrowDate}T${_selectedTime+2}:00';
 
 
-              bool isReservedTime = true;
+              bool isAvailable = false;
 
               var result = await http.get(
                   Uri.parse('$baseUrl/classrooms/availability/$building/$room/$tomorrowDate/')
               );
               if (result.statusCode == 200) {
                 List<dynamic> responseData = jsonDecode(result.body);
-                isReservedTime = responseData[_selectedTime - 9]['is_available'];
+                isAvailable = responseData[_selectedTime - 9]['is_available'];
 
               }
 
               Navigator.of(context).pop();
 
-              if (!isReservedTime) {
+              if (!isAvailable) {
                 _showReservationFailDialog(context);
               }
 
