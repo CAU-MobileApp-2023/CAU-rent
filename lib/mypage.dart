@@ -6,6 +6,9 @@ import 'package:teamproject/provider/User.dart';
 import 'package:teamproject/style.dart';
 import 'package:http/http.dart' as http;
 
+String baseUrl = 'http://caurent.kro.kr:8000';
+
+
 class MyPage extends StatefulWidget {
   const MyPage({Key? key}) : super(key: key);
   @override
@@ -21,7 +24,7 @@ class _MyPageState extends State<MyPage> {
   Future<void> _setEquipRentalStatus(String studentId) async {
     http.Response result;
     result = await http.get(
-        Uri.parse('http://10.0.2.2:8000/rental_records/devices/$studentId/now/')
+        Uri.parse('$baseUrl/rental_records/devices/$studentId/now/')
     );
     if (result.statusCode == 200) {
       List<dynamic> responseData = jsonDecode(result.body);
@@ -36,7 +39,7 @@ class _MyPageState extends State<MyPage> {
 
 
     result = await http.get(
-        Uri.parse('http://10.0.2.2:8000/rental_records/devices/$studentId/now/')
+        Uri.parse('$baseUrl/rental_records/devices/$studentId/now/')
     );
     if (result.statusCode == 200) {
       List<dynamic> responseData = jsonDecode(result.body);
@@ -51,7 +54,7 @@ class _MyPageState extends State<MyPage> {
 
 
     result = await http.get(
-        Uri.parse('http://10.0.2.2:8000/rental_records/devices/$studentId/now/')
+        Uri.parse('$baseUrl/rental_records/devices/$studentId/now/')
     );
     if (result.statusCode == 200) {
       List<dynamic> responseData = jsonDecode(result.body);

@@ -5,6 +5,9 @@ import 'package:teamproject/model/UserSignupData.dart';
 import 'package:teamproject/style.dart';
 import 'package:http/http.dart' as http;
 
+String baseUrl = 'http://caurent.kro.kr:8000';
+
+
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
 
@@ -268,7 +271,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
                         userData.department = '소프트웨어학부';
                         var result = await http.post(
-                            Uri.parse('http://10.0.2.2:8000/users/signup/'),
+                            Uri.parse('$baseUrl/users/signup/'),
                             body: jsonEncode(userData.toJson()),
                             headers: {'content-type': 'application/json'}
                         );

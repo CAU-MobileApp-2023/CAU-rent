@@ -8,6 +8,9 @@ import 'package:teamproject/style.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:http/http.dart' as http;
 
+String baseUrl = 'http://caurent.kro.kr:8000';
+
+
 class EquipmentPage extends StatefulWidget {
   const EquipmentPage({super.key});
 
@@ -16,6 +19,8 @@ class EquipmentPage extends StatefulWidget {
 }
 
 class _EquipmentPageState extends State<EquipmentPage> {
+  final equipment = ['MacBook', 'LG gram', 'WebCam'];
+
   late Map<int, bool> macBookAvailability;
   late Map<int, bool> lgGramAvailability;
   late Map<int, bool> webCamAvailability;
@@ -36,7 +41,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
   Future<void> _setRentalStatus() async {
     for (var i in macBooks) {
       var result = await http.get(
-          Uri.parse('http://10.0.2.2:8000/devices/availability/MacBook/$i/')
+          Uri.parse('$baseUrl/devices/availability/${equipment[0]}/$i/')
       );
       if (result.statusCode == 200) {
         List<dynamic> responseData = jsonDecode(result.body);
@@ -46,7 +51,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
 
     for (var i in lgGrams) {
       var result = await http.get(
-          Uri.parse('http://10.0.2.2:8000/devices/availability/LG Gram/$i/')
+          Uri.parse('$baseUrl/devices/availability/${equipment[1]}/$i/')
       );
       if (result.statusCode == 200) {
         List<dynamic> responseData = jsonDecode(result.body);
@@ -56,7 +61,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
 
     for (var i in webCams) {
       var result = await http.get(
-          Uri.parse('http://10.0.2.2:8000/devices/availability/WebCam/$i/')
+          Uri.parse('$baseUrl/devices/availability/${equipment[2]}/$i/')
       );
       if (result.statusCode == 200) {
         List<dynamic> responseData = jsonDecode(result.body);
@@ -75,20 +80,20 @@ class _EquipmentPageState extends State<EquipmentPage> {
               const SizedBox(height: 70),
               const Text("Equipment", style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold)),
               const SizedBox(height: 20),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25),
                 child: TabBar(
-                    labelStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    labelStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     labelColor: AppColor.Blue,
                     unselectedLabelColor: AppColor.Blue2,
                     indicatorSize: TabBarIndicatorSize.label,
-                    indicator: UnderlineTabIndicator(
+                    indicator: const UnderlineTabIndicator(
                       borderSide: BorderSide(width: 3, color: AppColor.Blue),
                     ),
                     tabs: [
-                      Tab(text: 'MacBook'),
-                      Tab(text: 'LG gram'),
-                      Tab(text: 'WebCam'),
+                      Tab(text: equipment[0]),
+                      Tab(text: equipment[1]),
+                      Tab(text: equipment[2]),
                     ]
                 ),
               ),
@@ -118,16 +123,12 @@ class _EquipmentPageState extends State<EquipmentPage> {
                                     IconButton(
                                       onPressed: () {
                                         if (macBookAvailability[i] == true) {
-                                          // _showModalBottomSheet(context, "MacBook", i);
-
-
-
-                                          _showDatePickerDialog(context, "MacBook", i);
+                                          _showDatePickerDialog(context, equipment[0], i);
 
 
 
                                         } else {
-                                          _showUnavailableDialog(context, "MacBook", i);
+                                          _showUnavailableDialog(context, equipment[0], i);
                                         }
                                       },
                                       icon: macBookAvailability[i] == true
@@ -153,11 +154,11 @@ class _EquipmentPageState extends State<EquipmentPage> {
                                     IconButton(
                                       onPressed: () {
                                         if (lgGramAvailability[i] == true) {
-                                          _showDatePickerDialog(context, "LG Gram", i);
+                                          _showDatePickerDialog(context, equipment[1], i);
 
 
                                         } else {
-                                          _showUnavailableDialog(context, "LG Gram", i);
+                                          _showUnavailableDialog(context, equipment[1], i);
                                         }
                                       },
                                       icon: lgGramAvailability[i] == true
@@ -183,11 +184,11 @@ class _EquipmentPageState extends State<EquipmentPage> {
                                     IconButton(
                                       onPressed: () {
                                         if (webCamAvailability[i] == true) {
-                                          _showDatePickerDialog(context, "WebCam", i);
+                                          _showDatePickerDialog(context, equipment[2], i);
 
 
                                         } else {
-                                          _showUnavailableDialog(context, "WebCam", i);
+                                          _showUnavailableDialog(context, equipment[2], i);
                                         }
                                       },
                                       icon: webCamAvailability[i] == true
@@ -316,7 +317,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
                           int? device;
 
                           var result = await http.get(
-                            Uri.parse('http://10.0.2.2:8000/devices/inform/$equipmentType/$equipmentNum/')
+                            Uri.parse('$baseUrl/devices/inform/$equipmentType/$equipmentNum/')
                           );
                           if (result.statusCode == 200) {
                             Map<String, dynamic> responseData = jsonDecode(result.body);
@@ -324,7 +325,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
                           }
 
                           result = await http.post(
-                            Uri.parse('http://10.0.2.2:8000/rental_records/rent/device/'),
+                            Uri.parse('$baseUrl/rental_records/rent/device/'),
                             body: jsonEncode(
                               EquipmentRentalData(renter, device, startDate, endDate).toJson()
                             ),

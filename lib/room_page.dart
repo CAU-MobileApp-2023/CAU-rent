@@ -9,6 +9,9 @@ import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
+String baseUrl = 'http://caurent.kro.kr:8000';
+String building = '208관';
+
 
 class RoomPage extends StatefulWidget {
   const RoomPage({super.key});
@@ -18,7 +21,7 @@ class RoomPage extends StatefulWidget {
 }
 
 class _RoomPageState extends State<RoomPage> {
-  final _rooms =['-- 선택해 주세요 --', '팀프로젝트실1', '팀프로젝트실2', '팀프로젝트실3', '팀프로젝트실4', '팀프로젝트실5'];
+  final _rooms = ['-- 선택해 주세요 --', '팀프로젝트실1', '팀프로젝트실2', '팀프로젝트실3', '팀프로젝트실4', '팀프로젝트실5'];
   String? _selectedRoom;
   String tomorrowDate = DateFormat('yyyy-MM-dd').format(DateTime.now().add(const Duration(days: 1)));
 
@@ -35,14 +38,14 @@ class _RoomPageState extends State<RoomPage> {
 
   Future<void> _getRentalRecords() async {
     var result = await http.get(
-      Uri.parse('http://caurent.kro.kr:8000/rental_records/classroom/208관/$_selectedRoom/$tomorrowDate')
+      Uri.parse('$baseUrl/rental_records/classroom/$building/$_selectedRoom/$tomorrowDate/')
     );
     if (result.statusCode == 200) {
       rentalRecords = jsonDecode(result.body);
 
       for (var data in rentalRecords) {
         var result = await http.get(
-            Uri.parse('http://10.0.2.2:8000/users/inform/${data['renter']}/')
+            Uri.parse('$baseUrl/users/inform/${data['renter']}/')
         );
         if (result.statusCode == 200) {
           var responseData = jsonDecode(result.body);
@@ -335,7 +338,7 @@ class _RoomPageState extends State<RoomPage> {
               bool isReservedTime = true;
 
               var result = await http.get(
-                  Uri.parse('http://10.0.2.2:8000/classrooms/availability/208관/$room/$tomorrowDate/')
+                  Uri.parse('$baseUrl/classrooms/availability/$building/$room/$tomorrowDate/')
               );
               if (result.statusCode == 200) {
                 List<dynamic> responseData = jsonDecode(result.body);
@@ -351,7 +354,7 @@ class _RoomPageState extends State<RoomPage> {
 
               else {
                 result = await http.get(Uri.parse(
-                    'http://10.0.2.2:8000/classrooms/inform/208관/$room/'));
+                    '$baseUrl/classrooms/inform/$building/$room/'));
                 if (result.statusCode == 200) {
                   Map<String, dynamic> responseData = jsonDecode(result.body);
                   roomId = int.parse(responseData['id'].toString());
@@ -359,7 +362,7 @@ class _RoomPageState extends State<RoomPage> {
 
                 result = await http.post(
                     Uri.parse(
-                        'http://10.0.2.2:8000/rental_records/rent/classroom/'),
+                        '$baseUrl/rental_records/rent/classroom/'),
                     body: jsonEncode(
                         RoomRentalData(renter, roomId, startDate, endDate)
                             .toJson()),
@@ -401,9 +404,9 @@ class _RoomPageState extends State<RoomPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const SizedBox(height: 18),
-              Text('Date: $date', style: TextStyle(fontSize: 16)),
+              Text('Date: $date', style: const TextStyle(fontSize: 16)),
               const SizedBox(height: 5),
-              Text('Time: $time:00 - ${time+2}:00', style: TextStyle(fontSize: 16)),
+              Text('Time: $time:00 - ${time+2}:00', style: const TextStyle(fontSize: 16)),
             ],
           ),
         ),

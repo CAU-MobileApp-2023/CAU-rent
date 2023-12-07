@@ -9,6 +9,9 @@ import 'package:teamproject/signup_page.dart';
 import 'package:teamproject/style.dart';
 import 'package:http/http.dart' as http;
 
+String baseUrl = 'http://caurent.kro.kr:8000';
+
+
 class LogInPage extends StatefulWidget {
   const LogInPage({super.key});
 
@@ -46,27 +49,28 @@ class _LogInPageState extends State<LogInPage> {
               ),
             ),
 
-            /*
+
             const Text(
               'CAU rent',
               style: TextStyle(fontSize: 28, color: AppColor.Blue, fontWeight: FontWeight.bold),
             ),
-             */
+
 
             /* ----------------------------------- */
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const HomePage()),
-                );
-              },
-              child: const Text(
-                'CAU rent',
-                style: TextStyle(fontSize: 28, color: AppColor.Blue, fontWeight: FontWeight.bold),
-              ),
-            ),
+            // InkWell(
+            //   onTap: () {
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(builder: (context) => const HomePage()),
+            //     );
+            //   },
+            //   child: const Text(
+            //     'CAU rent',
+            //     style: TextStyle(fontSize: 28, color: AppColor.Blue, fontWeight: FontWeight.bold),
+            //   ),
+            // ),
             /* ----------------------------------- */
+
             const SizedBox(height: 20),
 
             SizedBox(
@@ -154,7 +158,7 @@ class _LogInPageState extends State<LogInPage> {
               onPressed: () async {
                 if (_formKey.currentState!.validate()) {
                   var result = await http.post(
-                      Uri.parse('http://10.0.2.2:8000/users/login/'),
+                      Uri.parse('$baseUrl/users/login/'),
                       body: jsonEncode(userData.toJson()),
                       headers: {'content-type': 'application/json'}
                   );
