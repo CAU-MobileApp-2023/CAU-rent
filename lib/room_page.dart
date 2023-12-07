@@ -18,9 +18,6 @@ class RoomPage extends StatefulWidget {
 }
 
 class _RoomPageState extends State<RoomPage> {
-  //late Map<int, bool> projectRoomRentalStatus;
-  //final projectRooms = List.generate(5, (i) => i + 1);
-
   final _rooms =['-- 선택해 주세요 --', '팀프로젝트실1', '팀프로젝트실2', '팀프로젝트실3', '팀프로젝트실4', '팀프로젝트실5'];
   String? _selectedRoom;
   String tomorrowDate = DateFormat('yyyy-MM-dd').format(DateTime.now().add(const Duration(days: 1)));
@@ -31,17 +28,14 @@ class _RoomPageState extends State<RoomPage> {
     setState(() {
       _selectedRoom = _rooms[0];
     });
-    // 각 팀플룸 대여 상태 저장
-    // projectRoomRentalStatus = { for (var item in projectRooms) item : item % 2 == 0 };
   }
-
 
 
   late List<dynamic> rentalRecords;
 
   Future<void> _getRentalRecords() async {
     var result = await http.get(
-      Uri.parse('http://10.0.2.2:8000/rental_records/classroom/208관/$_selectedRoom/')
+      Uri.parse('http://caurent.kro.kr:8000/rental_records/classroom/208관/$_selectedRoom/$tomorrowDate')
     );
     if (result.statusCode == 200) {
       rentalRecords = jsonDecode(result.body);
@@ -88,7 +82,7 @@ class _RoomPageState extends State<RoomPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Icon(Icons.people, color: AppColor.Blue4, size: 35),
-                  const SizedBox( width: 20),
+                  const SizedBox(width: 20),
                   DropdownButton(
                     value: _selectedRoom,
                     items: _rooms
@@ -105,9 +99,65 @@ class _RoomPageState extends State<RoomPage> {
               const SizedBox(height: 10),
 
 
-
               _selectedRoom == _rooms[0]
-              ? const Text('선택하시오')
+              ? SizedBox(
+                width: 350,
+                child: Column(
+                  children: [
+                    Table(
+                      children: const [
+                        TableRow(
+                          children: [
+                            TableCell(
+                              child: SizedBox(
+                                  height: 50,
+                                  child: Center(child: Text('날짜'))
+                              ),
+                            ),
+                            TableCell(
+                              child: SizedBox(
+                                  height: 50,
+                                  child: Center(child: Text('시간'))
+                              ),
+                            ),
+                            TableCell(
+                              child: SizedBox(
+                                  height: 50,
+                                  child: Center(child: Text('예약자명'))
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+
+                    Table(
+                      border: const TableBorder(
+                        top: BorderSide(width: 1, color: AppColor.Grey1),
+                      ),
+                      children: const [
+                        TableRow(
+                          children: [
+                            TableCell(
+                              child: SizedBox(
+                                  height: 70,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text('팀프로젝트실을 선택해 주세요.'),
+                                      Text('Select the Team Project Room.'),
+                                    ],
+                                  )
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+
+                  ],
+                ),
+              )
               : FutureBuilder<void>(
                 future: _getRentalRecords(),
                 builder: (context, snapshot) {
@@ -123,14 +173,6 @@ class _RoomPageState extends State<RoomPage> {
                     return Column(
                       children: [
                         Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              width: 1,
-                              color: AppColor.Grey1,
-                            ),
-                          ),
-
-
 
                           child:
                             rentalRecords.isEmpty
@@ -175,8 +217,14 @@ class _RoomPageState extends State<RoomPage> {
                                         children: [
                                           TableCell(
                                             child: SizedBox(
-                                              height: 50,
-                                              child: Center(child: Text('예약 정보가 없습니다.'))
+                                              height: 70,
+                                              child: Column(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  Text('예약 정보가 없습니다.'),
+                                                  Text('There is no reservation.'),
+                                                ],
+                                              )
                                             ),
                                           ),
                                         ],
@@ -205,16 +253,10 @@ class _RoomPageState extends State<RoomPage> {
                                   ),
                                   DataCell(Text(data['renter'])),
                                 ]);
-
                               }).toList(),
 
-
-
                             ),
-
-
                         ),
-
 
 
                         const SizedBox(height: 15),
@@ -222,16 +264,7 @@ class _RoomPageState extends State<RoomPage> {
 
                         ElevatedButton(
                           onPressed: () {
-
-
-
-
                             _showTimeDialog(context, _selectedRoom!);
-                            // _showReservedDialog(context);
-
-
-
-
                           },
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(AppColor.Blue),
@@ -264,11 +297,6 @@ class _RoomPageState extends State<RoomPage> {
   }
 
 
-
-
-
-
-
   void _showTimeDialog(BuildContext context, String room) { // 예약 시간 팝업창
     final List<int> _time = List.generate(5, (index) => index * 2 + 9);
     int _selectedTime = _time[0];
@@ -297,14 +325,11 @@ class _RoomPageState extends State<RoomPage> {
               style: TextStyle(color: AppColor.Blue, fontWeight: FontWeight.w500),
             ),
             onPressed: () async {
-              // 여기에 Ok 버튼을 눌렀을 때의 동작을 추가하세요.
-
 
               String renter = context.read<UserProvider>().userStudentId;
               int? roomId;
               String startDate = '${tomorrowDate}T$_selectedTime:00';
               String endDate = '${tomorrowDate}T${_selectedTime+2}:00';
-
 
 
               bool isReservedTime = true;
@@ -321,8 +346,7 @@ class _RoomPageState extends State<RoomPage> {
               Navigator.of(context).pop();
 
               if (!isReservedTime) {
-                // _showReservationFailDialog(context);
-                _showReservationSuccessDialog(context, tomorrowDate, _selectedTime);
+                _showReservationFailDialog(context);
               }
 
               else {
@@ -346,9 +370,6 @@ class _RoomPageState extends State<RoomPage> {
               }
             },
           ),
-
-
-
 
           CupertinoDialogAction(
             child: const Text(
@@ -415,7 +436,6 @@ class _RoomPageState extends State<RoomPage> {
         builder: (context) => CupertinoAlertDialog(
           title: const Text('Failed to Reserve', style: TextStyle(fontSize: 24)),
 
-
           content: const SizedBox(
             height: 60,
             child: Column(
@@ -431,7 +451,6 @@ class _RoomPageState extends State<RoomPage> {
           ),
 
 
-
           actions: <Widget>[
             CupertinoDialogAction(
               child: const Text(
@@ -443,152 +462,11 @@ class _RoomPageState extends State<RoomPage> {
               },
             ),
 
-
           ],
-
-
         ),
     );
 
   }
-
-
-
-
-
-
-
-
-
-
-
-  /* 이 아래는 예약 가능 여부 팝업창인데 나중에 백엔드랑 연동 후에 필요할 것 같아서 그대로 둘게요!*/
-
-  void _showAvailableDialog(BuildContext context, int equipmentNum) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
-          ),
-          title: Center(
-              child: Text(
-                'Room #$equipmentNum',
-                style: const TextStyle(fontSize: 30, color: AppColor.Blue, fontWeight: FontWeight.bold),
-              )
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text('현재 사용 가능한 팀플룸입니다.'),
-              const Text('홈페이지에서 예약 후 사용할 수 있습니다.'),
-              const SizedBox(height: 10),
-              const Text(
-                'This room is available to reserve now.',
-                style: TextStyle(fontSize: 14.4),
-              ),
-              const Text(
-                'You can make a reservation on the website.',
-                style: TextStyle(fontSize: 14.4),
-              ),
-              const SizedBox(height: 25),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop(); // AlertDialog 닫기
-                    },
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(AppColor.Blue),
-                      foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                      fixedSize: MaterialStateProperty.all<Size>(const Size(140, 50)),
-                      shape: MaterialStateProperty.all<OutlinedBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0), // 버튼의 모서리를 둥글게
-                          )
-                      ),
-                    ),
-                    child: const Text(
-                      'Confirm',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  void _showUnavailableDialog(BuildContext context, int equipmentNum) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
-          ),
-          title: Center(
-              child: Text(
-                'Room #$equipmentNum',
-                style: const TextStyle(fontSize: 30, color: AppColor.Blue, fontWeight: FontWeight.bold),
-              )
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text('현재 사용 중인 팀플룸입니다.'),
-              const Text(
-                'This room is not available to reserve now.',
-                style: TextStyle(fontSize: 14.4),
-              ),
-              const SizedBox(height: 25),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop(); // AlertDialog 닫기
-                    },
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(AppColor.Blue),
-                      foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                      fixedSize: MaterialStateProperty.all<Size>(const Size(140, 50)),
-                      shape: MaterialStateProperty.all<OutlinedBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0), // 버튼의 모서리를 둥글게
-                          )
-                      ),
-                    ),
-                    child: const Text(
-                      'Confirm',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-
-  void _showSnackBar(String message, Color color) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        duration: const Duration(seconds: 2),
-        content: Text(message),
-        backgroundColor: color,
-      ),
-    );
-  }
-
 
 
 }
