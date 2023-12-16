@@ -21,6 +21,8 @@ class LogInPage extends StatefulWidget {
 
 class _LogInPageState extends State<LogInPage> {
   UserLoginData userData = UserLoginData();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -55,22 +57,6 @@ class _LogInPageState extends State<LogInPage> {
               style: TextStyle(fontSize: 28, color: AppColor.Blue, fontWeight: FontWeight.bold),
             ),
 
-
-            /* ----------------------------------- */
-            // InkWell(
-            //   onTap: () {
-            //     Navigator.push(
-            //       context,
-            //       MaterialPageRoute(builder: (context) => const HomePage()),
-            //     );
-            //   },
-            //   child: const Text(
-            //     'CAU rent',
-            //     style: TextStyle(fontSize: 28, color: AppColor.Blue, fontWeight: FontWeight.bold),
-            //   ),
-            // ),
-            /* ----------------------------------- */
-
             const SizedBox(height: 20),
 
             SizedBox(
@@ -78,6 +64,7 @@ class _LogInPageState extends State<LogInPage> {
               child: TextFormField(
                 key: const ValueKey(1),
                 keyboardType: TextInputType.emailAddress,
+                controller: emailController,
                 decoration: const InputDecoration(
                   labelText: 'Email',
                   hintText: '이메일을 입력하세요',
@@ -118,6 +105,7 @@ class _LogInPageState extends State<LogInPage> {
               child: TextFormField(
                 key: const ValueKey(2),
                 keyboardType: TextInputType.text,
+                controller: passwordController,
                 decoration: const InputDecoration(
                   labelText: 'Password',
                   hintText: '비밀번호를 입력하세요',
@@ -194,6 +182,9 @@ class _LogInPageState extends State<LogInPage> {
 
             ElevatedButton(
               onPressed: () {
+                emailController.clear();
+                passwordController.clear();
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const SignUpPage()),
@@ -227,6 +218,9 @@ class _LogInPageState extends State<LogInPage> {
     context.read<UserProvider>().setUserStudentId(responseData['user_data']['student_id']);
     context.read<UserProvider>().setUserPhoneNumber(responseData['user_data']['phone_number']);
 
+    emailController.clear();
+    passwordController.clear();
+
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const HomePage()),
@@ -242,4 +236,5 @@ class _LogInPageState extends State<LogInPage> {
       ),
     );
   }
+
 }
